@@ -1,9 +1,12 @@
+import logging
 import pandas as pd
 import numpy as np
 from pathlib import Path
 
 # from extract import extract
 # from extract.main import INPUT_PATH
+
+logger = logging.getLogger(__name__)
 
 pd.options.display.width = 200
 

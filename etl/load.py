@@ -1,11 +1,13 @@
+import logging
 import pandas as pd
 
 # https://docs.sqlalchemy.org/en/20/core/engines.html
-
 from sqlalchemy import create_engine
 from sqlalchemy import URL
 # 
 # engine = create_engine("postgresql+psycopg2://scott:tiger@localhost:5432/mydatabase")
+
+logger = logging.getLogger(__name__)
 
 def get_db_url(
         user:str,
