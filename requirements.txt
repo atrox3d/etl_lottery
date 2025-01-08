@@ -5,3 +5,5 @@ html5lib
 beautifulsoup4
 sqlalchemy
 mysql-connector-python
+streamlit
+
