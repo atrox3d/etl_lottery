@@ -42,7 +42,16 @@ def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataF
         conditions.append('categoria = %s')
         params.append(category)
     
+    if location is not None:
+        conditions.append("luogo like %s")
+        params.append(f'%{location}%')
+    
+    if prov is not None:
+        conditions.append('prov = %s')
+        params.append(prov)
+    
     if conditions:
         sql = f'{sql} WHERE {" AND ".join(conditions)}'
+        print(sql % tuple(params))
     
-    return pd.read_sql(sql, db, params=params)
+    return pd.read_sql(sql, engine, params=tuple(params))

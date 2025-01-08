@@ -34,7 +34,6 @@ def test_connection(config:dict|None=None) -> tuple:
     assert db.is_connected()
     
     db.close()
-    print(f'{db.is_connected() = }')
     assert not db.is_connected()
     
     return(
