@@ -1,0 +1,40 @@
+# version: '3.7'
+
+services:
+  db:
+    image: mysql:9.1.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      # MYSQL_ROOT_PASSWORD: ... 
+      # MYSQL_DATABASE: your_database_name
+      # MYSQL_USER: your_username
+      # MYSQL_PASSWORD: ...
+    volumes:
+      # - ./mysql_data:/var/lib/mysql
+      # - ${HOME}/code/mysql/MYSQL-DOCKER-DATA-DIR:/var/lib/mysql
+      - .mysqldata:/var/lib/mysql
+      # - ./mysql_dump:/dump⁄
+      # - ${HOME}/code/mysql/MYSQL-INPUT-OUTPUT/:/dump
+      - .mysqlout/:/out
+      - .mysqlin/:/in
+      - .mysqlfiles/:/var/lib/mysql-files
+    ports:
+      - "3306:3306"
+    secrets:
+      - mysql_root_password
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      # MYSQL_ROOT_PASSWORD: your_root_password
+    ports:
+      - "8080:80"
+
+secrets:
+  mysql_root_password:
+    file: .secrets/password.txt

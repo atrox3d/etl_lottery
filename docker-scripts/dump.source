@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+SCRIPTS_DIR=$(dirname ${BASH_SOURCE})
+
+
+function syntax() {
+    echo "syntax $(basename ${BASH_SOURCE}) <database_name> [sql_filename | procedures.sql]"
+    exit 1 
+}
+
+function check_params() {
+    if [ $# -lt 1 ]
+    then
+        syntax
+    else
+        DATABASE="${1}"
+    fi
+
+    if [ $# -gt 1 ]
+    then
+        SQL_FILE="${2}"
+    else
+        SQL_FILE="procedures.sql"
+    fi
+}
