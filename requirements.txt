@@ -6,4 +6,5 @@ beautifulsoup4
 sqlalchemy
 mysql-connector-python
 streamlit
-
+matplotlib
+plotly.express
