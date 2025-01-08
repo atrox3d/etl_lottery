@@ -2,28 +2,16 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from dbhelpers.config import build_config
-from dbhelpers.db import get_db, test_connection
-from dashboard.dal import get_winners
-DB_NAME = 'testing'
-config = build_config(database=DB_NAME)
+from dashboard.dal import get_connection_status, get_winners
 
-try:
-    user, server, port = test_connection(config)
-    connection_status = 'OK'
-except Exception as e:
-    connection_status = 'ERRORE'
-    
-db = get_db(config)
-winners = get_winners(db)
-
+winners = get_winners()
 
 st.title('Analisi lotteria italia')
 
 st.write(f'''
         Dashboard per analisi vincite Lotteria Italia 2024 - 2025
         
-        stato della connessione: {connection_status}
+        stato della connessione: {get_connection_status()}
         ''')
 
 st.write(winners.head())
