@@ -16,6 +16,8 @@ def get_db_url(
         database:str,
         driver:str="mysql+mysqlconnector"
 ) -> URL:
+
+    logger.info('creating db URL')
     url_object = URL.create(
         driver,
         username=user,
@@ -28,8 +30,15 @@ def get_db_url(
 
 def load_to_mysql(df:pd.DataFrame, url_object:URL):
 
+    logger.info('creating engine')
+    logger.info(f'driver    : {url_object.drivername}')
+    logger.info(f'host      : {url_object.host}')
+    logger.info(f'user      : {url_object.username}')
+    logger.info(f'password  : {url_object.password}')
+    logger.info(f'databse   : {url_object.database}')
     engine = create_engine(url_object)
     
+    logger.info('loading to mysql')
     df.to_sql(name='lotteria', con=engine, if_exists='replace', index=True)
     
 # conn = engine.connect()

@@ -21,6 +21,7 @@ def show_dfs(dfs:list[pd.DataFrame]):
 def process_cat1(cat1:pd.DataFrame, col_names:pd.Series) -> pd.DataFrame:
     ''' process first table '''
     
+    logger.info('extracting category1')
     cat1.columns = col_names                    # set column names
     cat1 = cat1.drop(index=0)                   # drop first row (header)
     
@@ -38,6 +39,7 @@ def process_cat1(cat1:pd.DataFrame, col_names:pd.Series) -> pd.DataFrame:
 def drop_all_nan_cols(dfs:list[pd.DataFrame]):
     ''' drops all NaN columns from all dataframes '''
     
+    logger.info('dropping all NaN columns')
     for ndx, df in enumerate(dfs[1:], 1):       # loop over all dfs skipping 1st
         drop = []                               # reset droppable columns list
         
@@ -54,6 +56,7 @@ def parse_tables(dfs:list[pd.DataFrame]) -> list[np.ndarray]:
     
     # global col_names
     
+    logger.info('parsing other tables')
     category = 1                                                # 1st category is already ok
     rows:list[np.ndarray] = []                                  # output array
                     
@@ -84,6 +87,7 @@ def parse_tables(dfs:list[pd.DataFrame]) -> list[np.ndarray]:
 def create_newdf(rows:list[np.ndarray]) -> pd.DataFrame:
     ''' create new global df from the rows '''
     
+    logger.info('creating new df from tables')
     newdf = pd.DataFrame(                                       # create dataframe from rows
                     rows, 
                     columns=[
@@ -123,6 +127,8 @@ def create_newdf(rows:list[np.ndarray]) -> pd.DataFrame:
 
 def get_df_from_html(input_path:str) -> pd.DataFrame:
     ''' compound function '''
+
+    logger.info(f'creating df from html {input_path}')
     #
     # get data from html
     #

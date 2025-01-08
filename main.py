@@ -6,10 +6,26 @@ from dbhelpers.config import build_config
 
 logger = logging.getLogger(__name__)
 
-if __name__ == "__main__":
-    winners = get_df_from_html('data/in/lotteria.html')
-    # print(winners)
+INPUT_PATH = 'data/in/lotteria.html'
+DB_NAME = 'testing'
 
-    config = build_config(database='testing')
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO
+    )
+    logger.info('start etl process')
+    
+    logger.info(f'loading data')
+    winners = get_df_from_html(INPUT_PATH)
+    # print(winners)
+    
+    logger.info('loading config')
+    config = build_config(database=DB_NAME)
+    
+    logger.info('creating db URL')
     db_url = get_db_url(**config)
+    
+    logger.info('loading data to mysql db')
     load_to_mysql(winners, db_url)
+    
+    logger.info('end etl process')
