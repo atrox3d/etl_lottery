@@ -9,25 +9,6 @@ from sqlalchemy import URL
 
 logger = logging.getLogger(__name__)
 
-def get_db_url(
-        user:str,
-        password:str,
-        host:str,
-        database:str,
-        driver:str="mysql+mysqlconnector"
-) -> URL:
-
-    logger.info('creating db URL')
-    url_object = URL.create(
-        driver,
-        username=user,
-        password=password,  # plain (unescaped) text
-        host=host,
-        database=database,
-    )
-    return url_object
-
-
 def load_to_mysql(df:pd.DataFrame, url_object:URL):
 
     logger.info('creating engine')

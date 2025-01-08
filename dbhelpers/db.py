@@ -2,7 +2,9 @@ import logging
 
 import mysql.connector
 from mysql.connector import MySQLConnection
+from sqlalchemy import URL
 from dbhelpers.config import build_config, load_config, get_default_config
+from etl.load import logger
 
 logger = logging.getLogger(__name__)
 
@@ -49,3 +51,22 @@ if __name__ == "__main__":
     except Exception as e:
         print('ERROR |', e.__class__.__qualname__)
         print('ERROR |', e)
+
+
+def get_db_url(
+        user:str,
+        password:str,
+        host:str,
+        database:str,
+        driver:str="mysql+mysqlconnector"
+) -> URL:
+
+    logger.info('creating db URL')
+    url_object = URL.create(
+        driver,
+        username=user,
+        password=password,  # plain (unescaped) text
+        host=host,
+        database=database,
+    )
+    return url_object

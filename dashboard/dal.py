@@ -2,9 +2,12 @@ from mysql.connector import MySQLConnection
 import pandas as pd
 import numpy as np
 import streamlit as st
+from sqlalchemy import create_engine
+from sqlalchemy import URL
 
 from dbhelpers.config import build_config
-from dbhelpers.db import get_db, test_connection
+from dbhelpers.db import get_db, test_connection, get_db_url
+
 
 DB_NAME = 'testing'
 
@@ -26,6 +29,9 @@ def get_connection_status() -> str:
 
 @st.cache_data
 def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataFrame:
+
+    db_url = get_db_url(**config)
+    engine = create_engine(db_url)
     
     conditions = []
     params = []
