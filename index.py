@@ -4,7 +4,7 @@ import streamlit as st
 
 from dashboard.dal import get_connection_status, get_winners
 
-winners = get_winners()
+winners = get_winners(category=2)
 
 st.title('Analisi lotteria italia')
 

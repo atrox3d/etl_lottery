@@ -11,7 +11,10 @@ DB_NAME = 'testing'
 config = build_config(database=DB_NAME)
 db = get_db(config)
 
-def get_connection_status():
+# winners = get_winners(db)
+
+
+def get_connection_status() -> str:
     try:
         user, server, port = test_connection(config)
         connection_status = 'OK'
@@ -19,14 +22,21 @@ def get_connection_status():
         connection_status = 'ERRORE'
     return connection_status
 
-# winners = get_winners(db)
-
 
 
 @st.cache_data
 def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataFrame:
-    sql = """
-    SELECT *
-    FROM lotteria
-    """
-    return pd.read_sql(sql, db, params=[])
+    
+    conditions = []
+    params = []
+    
+    sql = 'SELECT * FROM lotteria'
+    
+    if category is not None:
+        conditions.append('categoria = %s')
+        params.append(category)
+    
+    if conditions:
+        sql = f'{sql} WHERE {" AND ".join(conditions)}'
+    
+    return pd.read_sql(sql, db, params=params)
