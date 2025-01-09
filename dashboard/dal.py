@@ -1,4 +1,5 @@
-from mysql.connector import MySQLConnection
+# from mysql.connector import MySQLConnection
+import logging
 import pandas as pd
 import numpy as np
 import streamlit as st
@@ -8,7 +9,7 @@ from sqlalchemy import URL
 from dbhelpers.config import build_config
 from dbhelpers.db import get_db, test_connection, get_db_url
 
-
+logger = logging.getLogger(__name__)
 DB_NAME = 'testing'
 
 config = build_config(database=DB_NAME)
@@ -42,7 +43,7 @@ def query_builder(sql:str, operator='AND', **args) -> str:
     conditions = []
     params = []
     
-    print(f'{args = }')
+    logger.info(f'{args = }')
     args = {condition:param for condition, param in args.items() if param}
     if args:
         for condition, param in args.items():
@@ -55,12 +56,12 @@ def query_builder(sql:str, operator='AND', **args) -> str:
                 params.append(param)
         
         sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
-        print(f'{sql = }')
-        print(f'{conditions = }')
-        print(f'{params = }')
-        print(sql % tuple(params))
+        logger.info(f'{sql = }')
+        logger.info(f'{conditions = }')
+        logger.info(f'{params = }')
+        logger.info(sql % tuple(params))
     else:
-        print(sql)
+        logger.info(sql)
     return sql, params
 
 
@@ -77,29 +78,8 @@ def get_winners(
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    # conditions = []
-    params = []
-    
-    sql = 'SELECT * FROM lotteria'
-    
-    # if category is not None:
-    #     conditions.append('categoria = %s')
-    #     params.append(category)
-    
-    # if location is not None:
-    #     conditions.append("luogo like %s")
-    #     # params.append(f'%{location}%')
-    #     params.append(format_like(location, middle=True))
-        
-    # if prov is not None:
-    #     conditions.append('prov = %s')
-    #     params.append(prov)
-    
-    # if conditions:
-    #     sql = f'{sql} WHERE {" AND ".join(conditions)}'
-    #     print(sql % tuple(params))
     sql, params = query_builder(
-        sql, 
+        'SELECT * FROM lotteria', 
         categoria=categoria, 
         luogo=luogo, 
         prov=prov,
@@ -109,18 +89,18 @@ def get_winners(
     )
     return pd.read_sql(sql, engine, params=tuple(params))
 
+
 @st.cache_data
 def get_prov() -> pd.DataFrame:
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    # conditions = []
     params = []
-    
     sql = 'select distinct Prov from lotteria order by prov'
         
     return pd.read_sql(sql, engine, params=tuple(params))
+
 
 @st.cache_data
 def get_luogo(prov:str=None) -> pd.DataFrame:
@@ -128,26 +108,12 @@ def get_luogo(prov:str=None) -> pd.DataFrame:
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    # conditions = []
-    params = []
-    
-    sql = 'select distinct luogo from lotteria'
-    
-    # if prov is not None:
-    #     conditions.append('prov = %s')
-    #     params.append(prov)
-
-    # if conditions:
-    #     sql = f'{sql} WHERE {" AND ".join(conditions)}'
-    sql, params = query_builder(sql, prov=prov)
-    
+    sql, params = query_builder(
+        'select distinct luogo from lotteria', 
+        prov=prov
+    )
     sql += ' order by luogo'
-    
-    if params:
-        print(sql % tuple(params))
-    else:
-        print(sql)
-        
+
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
@@ -157,10 +123,36 @@ def get_categoria() -> pd.DataFrame:
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    conditions = []
     params = []
-    
     sql = 'select distinct categoria from lotteria order by categoria'
         
     return pd.read_sql(sql, engine, params=tuple(params))
+
+
+@st.cache_data
+def get_serie() -> pd.DataFrame:
+
+    db_url = get_db_url(**config)
+    engine = create_engine(db_url)
+    
+    params = []
+    sql = 'select distinct serie from lotteria order by serie'
+        
+    return pd.read_sql(sql, engine, params=tuple(params))
+
+
+@st.cache_data
+def get_numero(serie:str=None) -> pd.DataFrame:
+
+    db_url = get_db_url(**config)
+    engine = create_engine(db_url)
+    
+    params = []
+    sql, params = query_builder(
+        'select numero from lotteria',
+        serie=serie
+    )
+    sql += ' order by numero'
+    return pd.read_sql(sql, engine, params=tuple(params))
+
 
