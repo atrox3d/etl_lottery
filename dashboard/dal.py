@@ -36,8 +36,34 @@ def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> s
     else:
         raise ValueError('at least one of start, middle, end is necessary')
     return fmt
+
+
+def query_builder(sql:str, operator='AND', **args) -> str:
+    conditions = []
+    params = []
     
-    
+    print(f'{args = }')
+    args = {condition:param for condition, param in args.items() if param}
+    if args:
+        for condition, param in args.items():
+            if condition.endswith('__like'):
+                condition = condition.replace('__like', ' like %s')
+                conditions.append(condition)
+                params.append(format_like(param, middle=True))
+            else:
+                conditions.append(f'{condition} = %s')
+                params.append(param)
+        
+        sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
+        print(f'{sql = }')
+        print(f'{conditions = }')
+        print(f'{params = }')
+        print(sql % tuple(params))
+    else:
+        print(sql)
+    return sql, params
+
+
 @st.cache_data
 def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataFrame:
 
@@ -49,23 +75,23 @@ def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataF
     
     sql = 'SELECT * FROM lotteria'
     
-    if category is not None:
-        conditions.append('categoria = %s')
-        params.append(category)
+    # if category is not None:
+    #     conditions.append('categoria = %s')
+    #     params.append(category)
     
-    if location is not None:
-        conditions.append("luogo like %s")
-        # params.append(f'%{location}%')
-        params.append(format_like(location, middle=True))
+    # if location is not None:
+    #     conditions.append("luogo like %s")
+    #     # params.append(f'%{location}%')
+    #     params.append(format_like(location, middle=True))
         
-    if prov is not None:
-        conditions.append('prov = %s')
-        params.append(prov)
+    # if prov is not None:
+    #     conditions.append('prov = %s')
+    #     params.append(prov)
     
-    if conditions:
-        sql = f'{sql} WHERE {" AND ".join(conditions)}'
-        print(sql % tuple(params))
-    
+    # if conditions:
+    #     sql = f'{sql} WHERE {" AND ".join(conditions)}'
+    #     print(sql % tuple(params))
+    sql, params = query_builder(sql, category=category, location=location, prov=prov)
     return pd.read_sql(sql, engine, params=tuple(params))
 
 @st.cache_data
