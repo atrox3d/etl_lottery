@@ -65,12 +65,19 @@ def query_builder(sql:str, operator='AND', **args) -> str:
 
 
 @st.cache_data
-def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataFrame:
+def get_winners(
+            categoria:int=None, 
+            luogo:str=None, 
+            prov:str=None,
+            serie:str=None,
+            numero:str=None,
+            premio:int=None
+) -> pd.DataFrame:
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    conditions = []
+    # conditions = []
     params = []
     
     sql = 'SELECT * FROM lotteria'
@@ -91,16 +98,24 @@ def get_winners(category:int=None, location:str=None, prov:str=None) -> pd.DataF
     # if conditions:
     #     sql = f'{sql} WHERE {" AND ".join(conditions)}'
     #     print(sql % tuple(params))
-    sql, params = query_builder(sql, category=category, location=location, prov=prov)
+    sql, params = query_builder(
+        sql, 
+        categoria=categoria, 
+        luogo=luogo, 
+        prov=prov,
+        serie=serie,
+        numero=numero,
+        premio=premio
+    )
     return pd.read_sql(sql, engine, params=tuple(params))
 
 @st.cache_data
-def get_provence() -> pd.DataFrame:
+def get_prov() -> pd.DataFrame:
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    conditions = []
+    # conditions = []
     params = []
     
     sql = 'select distinct Prov from lotteria order by prov'
@@ -108,22 +123,23 @@ def get_provence() -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 @st.cache_data
-def get_location(prov:str=None) -> pd.DataFrame:
+def get_luogo(prov:str=None) -> pd.DataFrame:
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
     
-    conditions = []
+    # conditions = []
     params = []
     
     sql = 'select distinct luogo from lotteria'
     
-    if prov is not None:
-        conditions.append('prov = %s')
-        params.append(prov)
+    # if prov is not None:
+    #     conditions.append('prov = %s')
+    #     params.append(prov)
 
-    if conditions:
-        sql = f'{sql} WHERE {" AND ".join(conditions)}'
+    # if conditions:
+    #     sql = f'{sql} WHERE {" AND ".join(conditions)}'
+    sql, params = query_builder(sql, prov=prov)
     
     sql += ' order by luogo'
     
@@ -136,7 +152,7 @@ def get_location(prov:str=None) -> pd.DataFrame:
 
 
 @st.cache_data
-def get_category() -> pd.DataFrame:
+def get_categoria() -> pd.DataFrame:
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
