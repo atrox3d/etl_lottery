@@ -18,7 +18,8 @@ if __name__ == "__main__":
     
     logger.info(f'loading data')
     winners = get_df_from_html(INPUT_PATH)
-    # print(winners)
+    check_nan = winners.isna().values.any()
+    assert check_nan == False
     
     logger.info('loading config')
     config = build_config(database=DB_NAME)

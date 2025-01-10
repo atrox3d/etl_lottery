@@ -59,12 +59,18 @@ with st.sidebar:
 with st.sidebar:
     st.subheader('Biglietto')
     
+    def reset_geo():
+        for elem in ['prov', 'luogo']:
+            st.session_state[elem] = None
+            
+    
     serie = st.selectbox(
         label='seleziona una serie',
         index=None,
         options=dal.get_serie(),
         key='serie',
-        placeholder='Non selezionato'
+        placeholder='Non selezionato',
+        on_change=reset_geo
     )
 
     numero = st.selectbox(
@@ -72,7 +78,8 @@ with st.sidebar:
         index=None,
         options=dal.get_numero(serie=serie),
         key='numero',
-        placeholder='Non selezionato'
+        placeholder='Non selezionato',
+        on_change=reset_geo
     )
 
 
@@ -106,7 +113,3 @@ st.dataframe(
     hide_index=True
 )
 st.write(len(winners))
-
-# st.session_state
-if st.button('stop'):
-    st.stop()

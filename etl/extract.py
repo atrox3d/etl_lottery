@@ -170,8 +170,8 @@ def get_df_from_html(input_path:str) -> pd.DataFrame:
     })
     
     for col in ['Serie', 'Numero', 'Luogo', 'Prov']:
-        winners[col] = winners[col].str.upper().str.rstrip()
-
+        winners[col] = winners[col].astype('str').str.upper().str.rstrip()
+    
     return winners
 
 
