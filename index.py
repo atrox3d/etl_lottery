@@ -22,16 +22,25 @@ st.write(f'''
         ''')
 
 
-st.sidebar.header('Filtri')
-st.sidebar.write('Usare le opzioni per filtrare i dati')
+with st.sidebar:
+    st.header('Filtri')
+    st.write('Usare le opzioni per filtrare i dati')
+    
+    link = st.checkbox(
+        label='filtri collegati',
+        value=True,
+        key='link'
+    )
 
-def reset_widgets():
-    for el in st.session_state:
-        st.session_state[el] = None
+    def reset_widgets():
+        for el in st.session_state:
+            if el not in ['link']:
+                st.session_state[el] = None
 
-st.sidebar.button('reset filtri',
-    on_click=reset_widgets
-)
+    st.button('reset filtri',
+        on_click=reset_widgets
+    )
+
 
 
 with st.sidebar:
@@ -50,7 +59,7 @@ with st.sidebar:
     luogo = st.selectbox(
         label='digita parte del luogo',
         index=None,
-        options=dal.get_luogo(prov=prov),
+        options=dal.get_luogo(prov=prov if link else None),
         key='luogo',
         placeholder='Non selezionato'
     )
