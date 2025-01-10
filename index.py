@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from dashboard import dal
+from dashboard import sqldal
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ st.title('Analisi lotteria italia')
 st.write(f'''
         Dashboard per analisi vincite Lotteria Italia 2024 - 2025
         
-        stato della connessione: {dal.get_connection_status()}
+        stato della connessione: {sqldal.get_connection_status()}
         ''')
 
 
@@ -50,7 +50,7 @@ with st.sidebar:
     prov = st.selectbox(
         label='seleziona una provincia',
         index=None,
-        options=dal.get_prov(),
+        options=sqldal.get_prov(),
         key='prov',
         placeholder='Non selezionato'
     )
@@ -59,7 +59,7 @@ with st.sidebar:
     luogo = st.selectbox(
         label='digita parte del luogo',
         index=None,
-        options=dal.get_luogo(prov=prov if link else None),
+        options=sqldal.get_luogo(prov=prov if link else None),
         key='luogo',
         placeholder='Non selezionato'
     )
@@ -76,7 +76,7 @@ with st.sidebar:
     serie = st.selectbox(
         label='seleziona una serie',
         index=None,
-        options=dal.get_serie(),
+        options=sqldal.get_serie(),
         key='serie',
         placeholder='Non selezionato',
         on_change=reset_geo
@@ -85,7 +85,7 @@ with st.sidebar:
     numero = st.selectbox(
         label='seleziona una numero',
         index=None,
-        options=dal.get_numero(serie=serie),
+        options=sqldal.get_numero(serie=serie),
         key='numero',
         placeholder='Non selezionato',
         on_change=reset_geo
@@ -97,7 +97,7 @@ with st.sidebar:
     categoria = st.selectbox(
         label='seleziona una categoria',
         index=None,
-        options=dal.get_categoria(),
+        options=sqldal.get_categoria(),
         key='categoria',
         placeholder='Non selezionato'
     )
@@ -107,7 +107,7 @@ with st.sidebar:
 
 
 # winners = get_winners(category=3, prov='MI')
-winners = dal.get_winners(
+winners = sqldal.get_winners(
     prov=prov, 
     luogo=luogo, 
     categoria=categoria,
