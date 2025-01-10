@@ -84,7 +84,15 @@ winners = dal.get_winners(
     serie=serie,
     numero=numero
 )
-st.write(winners.head())
+# st.write(winners
+        # .head()
+    # )
+st.dataframe(
+    winners, 
+    hide_index=True
+)
 st.write(len(winners))
 
-st.session_state
+# st.session_state
+if st.button('stop'):
+    st.stop()

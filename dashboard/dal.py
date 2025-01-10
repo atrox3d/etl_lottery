@@ -87,7 +87,7 @@ def get_winners(
         numero=numero,
         premio=premio
     )
-    return pd.read_sql(sql, engine, params=tuple(params))
+    return pd.read_sql(sql, engine, params=tuple(params), index_col='index')
 
 
 @st.cache_data
