@@ -25,53 +25,67 @@ st.write(f'''
 st.sidebar.header('Filtri')
 st.sidebar.write('Usare le opzioni per filtrare i dati')
 
-def reset():
+def reset_widgets():
     for el in st.session_state:
         st.session_state[el] = None
 
 st.sidebar.button('reset filtri',
-    on_click=reset
+    on_click=reset_widgets
 )
 
 
-st.sidebar.subheader('Geograficamente')
-prov = st.sidebar.selectbox(
-    label='seleziona una provincia',
-    index=None,
-    options=dal.get_prov(),
-    key='prov'
-)
+with st.sidebar:
+
+    st.subheader('Geograficamente')
+
+    prov = st.selectbox(
+        label='seleziona una provincia',
+        index=None,
+        options=dal.get_prov(),
+        key='prov',
+        placeholder='Non selezionato'
+    )
+
+    # st.sidebar.subheader('Luogo')
+    luogo = st.selectbox(
+        label='digita parte del luogo',
+        index=None,
+        options=dal.get_luogo(prov=prov),
+        key='luogo',
+        placeholder='Non selezionato'
+    )
 
 
-# st.sidebar.subheader('Luogo')
-luogo = st.sidebar.selectbox(
-    label='digita parte del luogo',
-    index=None,
-    options=dal.get_luogo(prov=prov),
-    key='luogo'
-)
+with st.sidebar:
+    st.subheader('Biglietto')
+    
+    serie = st.selectbox(
+        label='seleziona una serie',
+        index=None,
+        options=dal.get_serie(),
+        key='serie',
+        placeholder='Non selezionato'
+    )
 
-st.sidebar.subheader('Biglietto')
-categoria = st.sidebar.selectbox(
-    label='seleziona una categoria',
-    index=None,
-    options=dal.get_categoria(),
-    key='categoria'
-)
+    numero = st.selectbox(
+        label='seleziona una numero',
+        index=None,
+        options=dal.get_numero(serie=serie),
+        key='numero',
+        placeholder='Non selezionato'
+    )
 
-serie = st.sidebar.selectbox(
-    label='seleziona una serie',
-    index=None,
-    options=dal.get_serie(),
-    key='serie'
-)
 
-numero = st.sidebar.selectbox(
-    label='seleziona una numero',
-    index=None,
-    options=dal.get_numero(serie=serie),
-    key='numero'
-)
+with st.sidebar:
+    st.subheader('Premio')
+    categoria = st.selectbox(
+        label='seleziona una categoria',
+        index=None,
+        options=dal.get_categoria(),
+        key='categoria',
+        placeholder='Non selezionato'
+    )
+
 
 
 
