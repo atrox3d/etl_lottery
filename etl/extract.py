@@ -168,6 +168,9 @@ def get_df_from_html(input_path:str) -> pd.DataFrame:
         'Prov.':'Prov',
         'Località': 'Luogo'
     })
+    
+    for col in ['Serie', 'Numero', 'Luogo', 'Prov']:
+        winners[col] = winners[col].str.upper().str.rstrip()
 
     return winners
 
