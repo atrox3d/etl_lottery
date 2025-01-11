@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 import numpy as np
 import streamlit as st
+from traitlets import default
 
 # from dashboard import sqldal as dal
 from dashboard import pandasdal as dal
@@ -71,7 +72,7 @@ with st.sidebar:
 
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
-        index=None,
+        # index=None,
         options=dal.get_prov(df, link,
                             **st.session_state
         ),
@@ -82,7 +83,7 @@ with st.sidebar:
     # st.sidebar.subheader('Luogo')
     luogo = st.selectbox(                                                   # LUOGO
         label='digita parte del luogo',
-        index=None,
+        # index=None,
         options=dal.get_luogo(df, link, 
                             **st.session_state
         ),
@@ -103,9 +104,9 @@ with st.sidebar:
     
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
-        index=None,
+        # index=None,
         options=dal.get_serie(df, link,
-                            # **st.session_state
+                            **st.session_state
         ),
         key='serie',
         placeholder='Non selezionato',
@@ -114,13 +115,9 @@ with st.sidebar:
 
     numero = st.selectbox(                                                  # NUMERO
         label='seleziona una numero',
-        index=None,
+        # index=None,
         options=dal.get_numero(df, link, 
-                            # Prov=st.session_state.get('prov'),
-                            # Luogo=st.session_state.get('luogo'), 
-                            # Serie=st.session_state.get('serie'), 
-                            # Categoria=st.session_state.get('categoria'), 
-                            # Premio=st.session_state.get('premio')
+                            **st.session_state
         ),
         key='numero',
         placeholder='Non selezionato',
@@ -136,13 +133,9 @@ with st.sidebar:
     
     categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',
-        index=None,
+        # index=None,
         options=dal.get_categoria(df, link, 
-                            # Prov=st.session_state.get('prov'),
-                            # Luogo=st.session_state.get('luogo'), 
-                            # Serie=st.session_state.get('serie'), 
-                            # Numero=st.session_state.get('numero'), 
-                            # Premio=st.session_state.get('premio')
+                            **st.session_state
         ),
         key='categoria',
         placeholder='Non selezionato'
@@ -150,13 +143,9 @@ with st.sidebar:
     
     premio = st.selectbox(                                                  # PREMIO
         label='seleziona premio',
-        index=None,
+        # index=None,
         options=dal.get_premio(df, link, 
-                            # Prov=st.session_state.get('prov'),
-                            # Luogo=st.session_state.get('luogo'), 
-                            # Serie=st.session_state.get('serie'), 
-                            # Numero=st.session_state.get('numero'), 
-                            # Categoria=st.session_state.get('categoria'), 
+                            **st.session_state
         ),
         key='premio',
         placeholder='Non selezionato'
