@@ -13,12 +13,14 @@ logger = logging.getLogger(__name__)
 DB_NAME = 'testing'
 
 config = build_config(database=DB_NAME)
-db = get_db(config)
+# db = get_db(config)
 
 # winners = get_winners(db)
 
+CACHE_TTL = 0
 
 def get_connection_status() -> str:
+    return 'X'
     try:
         user, server, port = test_connection(config)
         connection_status = 'OK'
@@ -65,7 +67,7 @@ def query_builder(sql:str, operator='AND', **args) -> str:
     return sql, params
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_winners(
             categoria:int=None, 
             luogo:str=None, 
@@ -77,6 +79,16 @@ def get_winners(
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
+
+    logger.debug(dict(
+        categoria=categoria, 
+        luogo=luogo, 
+        prov=prov,
+        serie=serie,
+        numero=numero,
+        premio=premio
+
+    ))
     
     sql, params = query_builder(
         'SELECT * FROM lotteria', 
@@ -89,9 +101,11 @@ def get_winners(
     )
     return pd.read_sql(sql, engine, params=tuple(params), index_col='index')
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     # df = df if link else get_winners()
+    logger.debug(name)
+    logger.debug(kwargs)
     if link:
         for col, val in kwargs.items():
             if val is not None:
@@ -99,7 +113,7 @@ def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return df[name]
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     # df = df if link else get_winners()
@@ -115,7 +129,7 @@ def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_luogo(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     return get_field('Luogo', df, link, **kwargs).sort_values().unique()
@@ -139,7 +153,7 @@ def get_luogo(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_serie(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     return get_field('Serie', df, link, **kwargs).sort_values().unique()
@@ -156,7 +170,7 @@ def get_serie(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_numero(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     return get_field('Numero', df, link, **kwargs).sort_values().unique()
@@ -173,7 +187,7 @@ def get_numero(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_categoria(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     return get_field('Categoria', df, link, **kwargs).sort_values().unique()
@@ -187,7 +201,7 @@ def get_categoria(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     return pd.read_sql(sql, engine, params=tuple(params))
 
 
-@st.cache_data
+@st.cache_data(ttl=CACHE_TTL)
 def get_premio(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     return get_field('Premio', df, link, **kwargs).sort_values().unique()

@@ -10,7 +10,7 @@ from dashboard import pandasdal as dal
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
@@ -45,6 +45,7 @@ with st.sidebar:
 
 
 df  = dal.get_winners().copy()
+
 with st.sidebar:
 
     st.subheader('Geograficamente')
@@ -52,7 +53,13 @@ with st.sidebar:
     prov = st.selectbox(
         label='seleziona una provincia',
         index=None,
-        options=dal.get_prov(df, link),
+        options=dal.get_prov(df, link, 
+                            Luogo=st.session_state.get('luogo'), 
+                            Serie=st.session_state.get('serie'), 
+                            Numero=st.session_state.get('numero'), 
+                            Categoria=st.session_state.get('categoria'), 
+                            Premio=st.session_state.get('premio')
+        ),
         key='prov',
         placeholder='Non selezionato'
     )
@@ -61,7 +68,13 @@ with st.sidebar:
     luogo = st.selectbox(
         label='digita parte del luogo',
         index=None,
-        options=dal.get_luogo(df, link, Prov=prov),
+        options=dal.get_luogo(df, link, 
+                            Prov=st.session_state.get('prov'),
+                            Serie=st.session_state.get('serie'), 
+                            Numero=st.session_state.get('numero'), 
+                            Categoria=st.session_state.get('categoria'), 
+                            Premio=st.session_state.get('premio')
+        ),
         key='luogo',
         placeholder='Non selezionato'
     )
@@ -77,7 +90,13 @@ with st.sidebar:
     serie = st.selectbox(
         label='seleziona una serie',
         index=None,
-        options=dal.get_serie(df, link, Prov=prov, Luogo=luogo),
+        options=dal.get_serie(df, link,
+                            Prov=st.session_state.get('prov'),
+                            Luogo=st.session_state.get('luogo'), 
+                            Numero=st.session_state.get('numero'), 
+                            Categoria=st.session_state.get('categoria'), 
+                            Premio=st.session_state.get('premio')
+        ),
         key='serie',
         placeholder='Non selezionato',
         # on_change=reset_geo
@@ -86,7 +105,13 @@ with st.sidebar:
     numero = st.selectbox(
         label='seleziona una numero',
         index=None,
-        options=dal.get_numero(df, link, Prov=prov, Luogo=luogo, Serie=serie),
+        options=dal.get_numero(df, link, 
+                            Prov=st.session_state.get('prov'),
+                            Luogo=st.session_state.get('luogo'), 
+                            Serie=st.session_state.get('serie'), 
+                            Categoria=st.session_state.get('categoria'), 
+                            Premio=st.session_state.get('premio')
+        ),
         key='numero',
         placeholder='Non selezionato',
         # on_change=reset_geo
@@ -99,7 +124,13 @@ with st.sidebar:
     categoria = st.selectbox(
         label='seleziona una categoria',
         index=None,
-        options=dal.get_categoria(df, link, Prov=prov, Luogo=luogo, Serie=serie, Numero=numero),
+        options=dal.get_categoria(df, link, 
+                            Prov=st.session_state.get('prov'),
+                            Luogo=st.session_state.get('luogo'), 
+                            Serie=st.session_state.get('serie'), 
+                            Numero=st.session_state.get('numero'), 
+                            Premio=st.session_state.get('premio')
+        ),
         key='categoria',
         placeholder='Non selezionato'
     )
@@ -107,7 +138,13 @@ with st.sidebar:
     premio = st.selectbox(
         label='seleziona premio',
         index=None,
-        options=dal.get_premio(df, link, Prov=prov, Luogo=luogo, Serie=serie, Numero=numero, Categoria=categoria),
+        options=dal.get_premio(df, link, 
+                            Prov=st.session_state.get('prov'),
+                            Luogo=st.session_state.get('luogo'), 
+                            Serie=st.session_state.get('serie'), 
+                            Numero=st.session_state.get('numero'), 
+                            Categoria=st.session_state.get('categoria'), 
+        ),
         key='premio',
         placeholder='Non selezionato'
     )
@@ -133,3 +170,6 @@ st.dataframe(
     hide_index=True
 )
 st.write(len(winners))
+
+st.session_state
+
