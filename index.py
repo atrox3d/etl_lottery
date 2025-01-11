@@ -8,29 +8,48 @@ from traitlets import default
 from dashboard import pandasdal as dal
 
 
-logger = logging.getLogger(__name__)
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(levelname)s | %(funcName)s | %(message)s'
-)
-
-
 def console_space(rows=10):
+    ''' create some space in the console output '''
     for _ in range(rows):
         logger.info('') 
+
+
+def reset_widgets():
+    ''' reset widgets '''
+    
+    logger.info('RESETTING WIDGETS')
+    for el in st.session_state:
+        if el not in ['link']:
+            logger.debug(f'resetting {el}')
+            st.session_state[el] = None
+    
+    console_space()
+###############################################################################
+#
+#   setup logging and dataframe
+#
+###############################################################################
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG,
+    format='%(levelname)s | %(funcName)s | %(message)s'
+)
+df  = dal.get_winners().copy()
+###############################################################################
 #
 #   title
 #
+###############################################################################
 st.title('Analisi lotteria italia')
 st.write(f'''
-        Dashboard per analisi vincite Lotteria Italia 2024 - 2025
-        
-        stato della connessione: {dal.get_connection_status()}
-        ''')
+    Dashboard per analisi vincite Lotteria Italia 2024 - 2025
+    
+    stato della connessione: {dal.get_connection_status()}
+''')
+###############################################################################
 #
-#   sidebar header
+#   sidebar header filtri
 #
+###############################################################################
 with st.sidebar:
     
     st.header('Filtri')
@@ -42,32 +61,14 @@ with st.sidebar:
         # key='link'
     )
 
-    def reset_widgets():
-        ''' reset widgets '''
-        
-        logger.info('RESETTING WIDGETS')
-        for el in st.session_state:
-            if el not in ['link']:
-                logger.debug(f'resetting {el}')
-                st.session_state[el] = None
-        
-        console_space()
-        
-        
-        
     st.button('reset filtri',
         on_click=reset_widgets
     )
-
-
-df  = dal.get_winners().copy()
+###############################################################################
 #
-#   sidebar filters
+#   sidebar subheader geo
 #
-with st.sidebar:
-    #
-    #   sidebar subheader geo
-    #
+###############################################################################
     st.subheader('Geograficamente')
 
     prov = st.selectbox(                                                     # PROV
@@ -90,11 +91,11 @@ with st.sidebar:
         key='luogo',
         placeholder='Non selezionato'
     )
-
-with st.sidebar:
-    #
-    #   sidebar subheader biglietto
-    #
+###############################################################################
+#
+#   sidebar subheader biglietto
+#
+###############################################################################
     st.subheader('Biglietto')
     
     def reset_geo():
@@ -123,12 +124,11 @@ with st.sidebar:
         placeholder='Non selezionato',
         # on_change=reset_geo
     )
-
-
-with st.sidebar:
-    #
-    #   sidebar subheader premio
-    #
+###############################################################################
+#
+#   sidebar subheader premio
+#
+###############################################################################
     st.subheader('Premio')
     
     categoria = st.selectbox(                                               # CATEGORIA
@@ -150,10 +150,11 @@ with st.sidebar:
         key='premio',
         placeholder='Non selezionato'
     )
-
+###############################################################################
 #
 #   TABLE
 #
+###############################################################################
 
 # winners = get_winners(category=3, prov='MI')
 winners = dal.get_winners(
