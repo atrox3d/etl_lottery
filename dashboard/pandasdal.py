@@ -10,17 +10,17 @@ from dbhelpers.config import build_config
 from dbhelpers.db import get_db, test_connection, get_db_url
 
 logger = logging.getLogger(__name__)
-DB_NAME = 'testing'
 
+DB_NAME = 'testing'
+CACHE_TTL = None
 config = build_config(database=DB_NAME)
 # db = get_db(config)
-
 # winners = get_winners(db)
 
-CACHE_TTL = None
 
 def get_connection_status() -> str:
-    return 'X'
+    ''' get connection status as string'''
+    
     try:
         user, server, port = test_connection(config)
         connection_status = 'OK'
@@ -30,6 +30,8 @@ def get_connection_status() -> str:
 
 
 def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> str:
+    ''' format sql like value to parametrize queries '''
+    
     if middle:
         fmt = f'%{value}%'
     elif start:
@@ -41,14 +43,16 @@ def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> s
     return fmt
 
 
-def query_builder(sql:str, operator='AND', **args) -> str:
+def query_builder(sql:str, operator='AND', **kwargs) -> str:
+    ''' dynamically creates queries vases on kwargs '''
+    
     conditions = []
     params = []
     
-    logger.info(f'{args = }')
-    args = {condition:param for condition, param in args.items() if param}
-    if args:
-        for condition, param in args.items():
+    logger.info(f'{kwargs = }')
+    kwargs = {condition:param for condition, param in kwargs.items() if param}
+    if kwargs:
+        for condition, param in kwargs.items():
             if condition.endswith('__like'):
                 condition = condition.replace('__like', ' like %s')
                 conditions.append(condition)
@@ -76,7 +80,7 @@ def get_winners(
             numero:str=None,
             premio:int=None
 ) -> pd.DataFrame:
-
+    ''' get filtered df from mysql db '''
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
 
@@ -104,8 +108,8 @@ def get_winners(
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
+    ''' get df column applying conditions '''
     
-    # df = df if link else get_winners()
     logger.debug(f'{name}, {link}, {kwargs}')
     if link:
         for col, val in kwargs.items():
@@ -116,94 +120,41 @@ def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
-    logger.debug(f'{link}, {kwargs}')
-    prov = get_field('prov', df, link, **kwargs).sort_values().unique()
-    logger.debug(f'{prov = }')
-    return prov
-
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
+    ''' data helper '''
     
-    params = []
-    sql = 'select distinct Prov from lotteria order by prov'
-        
-    return pd.read_sql(sql, engine, params=tuple(params))
+    return get_field('prov', df, link, **kwargs).sort_values().unique()
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_luogo(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
+    ''' data helper '''
+    
     return get_field('luogo', df, link, **kwargs).sort_values().unique()
-
-
-    df = df if link else get_winners()
-    for col, val in kwargs.items():
-        if val is not None:
-            df = df[df[col]==val]
-    return df.Luogo
-    
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
-    
-    sql, params = query_builder(
-        'select distinct luogo from lotteria', 
-        prov=prov
-    )
-    sql += ' order by luogo'
-
-    return pd.read_sql(sql, engine, params=tuple(params))
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_serie(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
-    return get_field('serie', df, link, **kwargs).sort_values().unique()
-
-    df = df if link else get_winners()
-    return df.Serie
-
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
+    ''' data helper '''
     
-    params = []
-    sql = 'select distinct serie from lotteria order by serie'
-        
-    return pd.read_sql(sql, engine, params=tuple(params))
+    return get_field('serie', df, link, **kwargs).sort_values().unique()
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_numero(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
-    return get_field('numero', df, link, **kwargs).sort_values().unique()
-
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
+    ''' data helper '''
     
-    params = []
-    sql, params = query_builder(
-        'select numero from lotteria',
-        serie=serie
-    )
-    sql += ' order by numero'
-    return pd.read_sql(sql, engine, params=tuple(params))
+    return get_field('numero', df, link, **kwargs).sort_values().unique()
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_categoria(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
-    return get_field('categoria', df, link, **kwargs).sort_values().unique()
-
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
+    ''' data helper '''
     
-    params = []
-    sql = 'select distinct categoria from lotteria order by categoria'
-        
-    return pd.read_sql(sql, engine, params=tuple(params))
+    return get_field('categoria', df, link, **kwargs).sort_values().unique()
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_premio(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
-
+    ''' data helper '''
+    
     return get_field('premio', df, link, **kwargs).sort_values().unique()

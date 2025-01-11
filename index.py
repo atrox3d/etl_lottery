@@ -30,7 +30,8 @@ def reset_widgets():
 #
 ###############################################################################
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(
+    level=logging.INFO,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 df  = dal.get_winners().copy()
