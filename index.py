@@ -18,12 +18,15 @@ def console_space(rows=10):
 
 def reset_widgets():
     ''' reset widgets '''
-    
     logger.info('RESETTING WIDGETS')
     for el in st.session_state:
         if el not in ['link']:
-            logger.debug(f'resetting {el}')
-            st.session_state[el] = None
+            logger.info(f'resetting {el}')
+            del st.session_state[el]
+            # print(st.session_state[el])
+            # st.session_state[el] = None
+        
+    st.session_state.clear()
     
     console_space()
 ###############################################################################
@@ -74,9 +77,12 @@ with st.sidebar:
 ###############################################################################
     st.subheader('Geograficamente')
 
+    for k, v in st.session_state.items():
+        st.session_state[k] = v
+    
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
-        # index=None,
+        index=None,
         options=dal.get_prov(df, link,
                             **st.session_state
         ),
@@ -87,7 +93,7 @@ with st.sidebar:
     # st.sidebar.subheader('Luogo')
     luogo = st.selectbox(                                                   # LUOGO
         label='digita parte del luogo',
-        # index=None,
+        index=None,
         options=dal.get_luogo(df, link, 
                             **st.session_state
         ),
@@ -108,7 +114,7 @@ with st.sidebar:
     
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
-        # index=None,
+        index=None,
         options=dal.get_serie(df, link,
                             **st.session_state
         ),
@@ -119,7 +125,7 @@ with st.sidebar:
 
     numero = st.selectbox(                                                  # NUMERO
         label='seleziona una numero',
-        # index=None,
+        index=None,
         options=dal.get_numero(df, link, 
                             **st.session_state
         ),
@@ -136,7 +142,7 @@ with st.sidebar:
     
     categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',
-        # index=None,
+        index=None,
         options=dal.get_categoria(df, link, 
                             **st.session_state
         ),
@@ -146,7 +152,7 @@ with st.sidebar:
     
     premio = st.selectbox(                                                  # PREMIO
         label='seleziona premio',
-        # index=None,
+        index=None,
         options=dal.get_premio(df, link, 
                             **st.session_state
         ),
