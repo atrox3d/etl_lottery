@@ -118,7 +118,7 @@ def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
     # df = df if link else get_winners()
     # return df.Prov.sort_values().unique()
-    return get_field('Prov', df, link, **kwargs).sort_values().unique()
+    return get_field('prov', df, link, **kwargs).sort_values().unique()
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
@@ -132,7 +132,7 @@ def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_luogo(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    return get_field('Luogo', df, link, **kwargs).sort_values().unique()
+    return get_field('luogo', df, link, **kwargs).sort_values().unique()
 
 
     df = df if link else get_winners()
@@ -156,7 +156,7 @@ def get_luogo(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_serie(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    return get_field('Serie', df, link, **kwargs).sort_values().unique()
+    return get_field('serie', df, link, **kwargs).sort_values().unique()
 
     df = df if link else get_winners()
     return df.Serie
@@ -173,7 +173,7 @@ def get_serie(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_numero(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    return get_field('Numero', df, link, **kwargs).sort_values().unique()
+    return get_field('numero', df, link, **kwargs).sort_values().unique()
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
@@ -190,7 +190,7 @@ def get_numero(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_categoria(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    return get_field('Categoria', df, link, **kwargs).sort_values().unique()
+    return get_field('categoria', df, link, **kwargs).sort_values().unique()
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
@@ -204,4 +204,4 @@ def get_categoria(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_premio(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    return get_field('Premio', df, link, **kwargs).sort_values().unique()
+    return get_field('premio', df, link, **kwargs).sort_values().unique()
