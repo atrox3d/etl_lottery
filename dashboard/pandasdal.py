@@ -17,7 +17,7 @@ config = build_config(database=DB_NAME)
 
 # winners = get_winners(db)
 
-CACHE_TTL = 0
+CACHE_TTL = None
 
 def get_connection_status() -> str:
     return 'X'
@@ -101,11 +101,12 @@ def get_winners(
     )
     return pd.read_sql(sql, engine, params=tuple(params), index_col='index')
 
+
 @st.cache_data(ttl=CACHE_TTL)
 def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
+    
     # df = df if link else get_winners()
-    logger.debug(name)
-    logger.debug(kwargs)
+    logger.debug(f'{name}, {link}, {kwargs}')
     if link:
         for col, val in kwargs.items():
             if val is not None:
@@ -116,9 +117,10 @@ def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 @st.cache_data(ttl=CACHE_TTL)
 def get_prov(df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
 
-    # df = df if link else get_winners()
-    # return df.Prov.sort_values().unique()
-    return get_field('prov', df, link, **kwargs).sort_values().unique()
+    logger.debug(f'{link}, {kwargs}')
+    prov = get_field('prov', df, link, **kwargs).sort_values().unique()
+    logger.debug(f'{prov = }')
+    return prov
 
     db_url = get_db_url(**config)
     engine = create_engine(db_url)

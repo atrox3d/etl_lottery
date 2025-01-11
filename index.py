@@ -13,6 +13,11 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
+
+
+def console_space(rows=10):
+    for _ in range(rows):
+        logger.info('') 
 #
 #   title
 #
@@ -33,7 +38,7 @@ with st.sidebar:
     link = st.checkbox(
         label='filtri collegati',
         value=True,
-        key='link'
+        # key='link'
     )
 
     def reset_widgets():
@@ -42,8 +47,13 @@ with st.sidebar:
         logger.info('RESETTING WIDGETS')
         for el in st.session_state:
             if el not in ['link']:
+                logger.debug(f'resetting {el}')
                 st.session_state[el] = None
-
+        
+        console_space()
+        
+        
+        
     st.button('reset filtri',
         on_click=reset_widgets
     )
@@ -63,11 +73,7 @@ with st.sidebar:
         label='seleziona una provincia',
         index=None,
         options=dal.get_prov(df, link,
-                            # Luogo=st.session_state.get('luogo'), 
-                            # Serie=st.session_state.get('serie'), 
-                            # Numero=st.session_state.get('numero'), 
-                            # Categoria=st.session_state.get('categoria'), 
-                            # Premio=st.session_state.get('premio')
+                            **st.session_state
         ),
         key='prov',
         placeholder='Non selezionato'
@@ -78,11 +84,7 @@ with st.sidebar:
         label='digita parte del luogo',
         index=None,
         options=dal.get_luogo(df, link, 
-                            prov=st.session_state.get('prov'),
-                            # Serie=st.session_state.get('serie'), 
-                            # Numero=st.session_state.get('numero'), 
-                            # Categoria=st.session_state.get('categoria'), 
-                            # Premio=st.session_state.get('premio')
+                            **st.session_state
         ),
         key='luogo',
         placeholder='Non selezionato'
@@ -103,11 +105,7 @@ with st.sidebar:
         label='seleziona una serie',
         index=None,
         options=dal.get_serie(df, link,
-                            # Prov=st.session_state.get('prov'),
-                            # Luogo=st.session_state.get('luogo'), 
-                            # Numero=st.session_state.get('numero'), 
-                            # Categoria=st.session_state.get('categoria'), 
-                            # Premio=st.session_state.get('premio')
+                            # **st.session_state
         ),
         key='serie',
         placeholder='Non selezionato',
@@ -188,3 +186,4 @@ st.write(len(winners))
 
 st.session_state
 
+console_space()
