@@ -29,6 +29,15 @@ def reset_widgets():
     st.session_state.clear()
     
     console_space()
+
+
+def fix_widgets_reload():
+    ''' Interrupting the widget clean-up process 
+        https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
+    '''
+    
+    for k, v in st.session_state.items():
+        st.session_state[k] = v
 ###############################################################################
 #
 #   setup logging and dataframe
@@ -40,6 +49,7 @@ logging.basicConfig(
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 df  = dal.get_winners().copy()
+fix_widgets_reload()
 ###############################################################################
 #
 #   title
@@ -76,9 +86,6 @@ with st.sidebar:
 #
 ###############################################################################
     st.subheader('Geograficamente')
-
-    for k, v in st.session_state.items():
-        st.session_state[k] = v
     
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
