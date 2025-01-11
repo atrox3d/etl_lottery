@@ -165,11 +165,15 @@ def get_df_from_html(input_path:str) -> pd.DataFrame:
     winners = pd.concat([cat1, newdf]).reset_index(drop=True)
     winners = winners.reset_index(drop=True)
     winners = winners.rename(columns={
-        'Prov.':'Prov',
-        'Località': 'Luogo'
+        'Categoria': 'categoria',
+        'Serie': 'serie',
+        'Numero': 'numero',
+        'Località': 'luogo',
+        'Prov.':'prov',
+        'Premio': 'premio',
     })
     
-    for col in ['Serie', 'Numero', 'Luogo', 'Prov']:
+    for col in ['serie', 'numero', 'luogo', 'prov']:
         winners[col] = winners[col].astype('str').str.upper().str.rstrip()
     
     return winners
