@@ -26,7 +26,13 @@ def get_connection_status() -> str:
         connection_status = 'OK'
     except Exception as e:
         connection_status = 'ERRORE'
+    
+    logger.info(f'connection status: {connection_status}')
     return connection_status
+
+
+def filter_dict(**kwargs) -> dict:
+    return {k:v for k, v in kwargs.items() if v}
 
 
 def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> str:
@@ -40,6 +46,7 @@ def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> s
         fmt = f'%{value}'
     else:
         raise ValueError('at least one of start, middle, end is necessary')
+    logger.debug(f'{fmt = }')
     return fmt
 
 
@@ -49,8 +56,8 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     conditions = []
     params = []
     
+    kwargs = filter_dict(**kwargs)
     logger.info(f'{kwargs = }')
-    kwargs = {condition:param for condition, param in kwargs.items() if param}
     if kwargs:
         for condition, param in kwargs.items():
             if condition.endswith('__like'):
@@ -62,9 +69,9 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
                 params.append(param)
         
         sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
-        logger.info(f'{sql = }')
-        logger.info(f'{conditions = }')
-        logger.info(f'{params = }')
+        logger.debug(f'{sql = }')
+        logger.debug(f'{conditions = }')
+        logger.debug(f'{params = }')
         logger.info(sql % tuple(params))
     else:
         logger.info(sql)
@@ -81,18 +88,20 @@ def get_winners(
             premio:int=None
 ) -> pd.DataFrame:
     ''' get filtered df from mysql db '''
+    
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
 
-    logger.debug(dict(
-        categoria=categoria, 
-        luogo=luogo, 
-        prov=prov,
-        serie=serie,
-        numero=numero,
-        premio=premio
-
-    ))
+    params = filter_dict(
+            categoria=categoria, 
+            luogo=luogo, 
+            prov=prov,
+            serie=serie,
+            numero=numero,
+            premio=premio
+    )
+    
+    logger.info(f'{params = }')
     
     sql, params = query_builder(
         'SELECT * FROM lotteria', 

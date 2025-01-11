@@ -10,6 +10,8 @@ from dashboard import pandasdal as dal
 
 def console_space(rows=10):
     ''' create some space in the console output '''
+    
+    return
     for _ in range(rows):
         logger.info('') 
 
