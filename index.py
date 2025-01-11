@@ -13,18 +13,20 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
-
-
+#
+#   title
+#
 st.title('Analisi lotteria italia')
-
 st.write(f'''
         Dashboard per analisi vincite Lotteria Italia 2024 - 2025
         
         stato della connessione: {dal.get_connection_status()}
         ''')
-
-
+#
+#   sidebar header
+#
 with st.sidebar:
+    
     st.header('Filtri')
     st.write('Usare le opzioni per filtrare i dati')
     
@@ -35,6 +37,9 @@ with st.sidebar:
     )
 
     def reset_widgets():
+        ''' reset widgets '''
+        
+        logger.info('RESETTING WIDGETS')
         for el in st.session_state:
             if el not in ['link']:
                 st.session_state[el] = None
@@ -45,12 +50,16 @@ with st.sidebar:
 
 
 df  = dal.get_winners().copy()
-
+#
+#   sidebar filters
+#
 with st.sidebar:
-
+    #
+    #   sidebar subheader geo
+    #
     st.subheader('Geograficamente')
 
-    prov = st.selectbox(
+    prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
         index=None,
         options=dal.get_prov(df, link, 
@@ -65,7 +74,7 @@ with st.sidebar:
     )
 
     # st.sidebar.subheader('Luogo')
-    luogo = st.selectbox(
+    luogo = st.selectbox(                                                   # LUOGO
         label='digita parte del luogo',
         index=None,
         options=dal.get_luogo(df, link, 
@@ -80,6 +89,9 @@ with st.sidebar:
     )
 
 with st.sidebar:
+    #
+    #   sidebar subheader biglietto
+    #
     st.subheader('Biglietto')
     
     def reset_geo():
@@ -87,7 +99,7 @@ with st.sidebar:
             st.session_state[elem] = None
             
     
-    serie = st.selectbox(
+    serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
         index=None,
         options=dal.get_serie(df, link,
@@ -102,7 +114,7 @@ with st.sidebar:
         # on_change=reset_geo
     )
 
-    numero = st.selectbox(
+    numero = st.selectbox(                                                  # NUMERO
         label='seleziona una numero',
         index=None,
         options=dal.get_numero(df, link, 
@@ -119,9 +131,12 @@ with st.sidebar:
 
 
 with st.sidebar:
+    #
+    #   sidebar subheader premio
+    #
     st.subheader('Premio')
     
-    categoria = st.selectbox(
+    categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',
         index=None,
         options=dal.get_categoria(df, link, 
@@ -135,7 +150,7 @@ with st.sidebar:
         placeholder='Non selezionato'
     )
     
-    premio = st.selectbox(
+premio = st.selectbox(                                                      # PREMIO
         label='seleziona premio',
         index=None,
         options=dal.get_premio(df, link, 
@@ -149,9 +164,9 @@ with st.sidebar:
         placeholder='Non selezionato'
     )
 
-
-
-
+#
+#   TABLE
+#
 
 # winners = get_winners(category=3, prov='MI')
 winners = dal.get_winners(
