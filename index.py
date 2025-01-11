@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
-from dashboard import sqldal
+# from dashboard import sqldal as dal
+from dashboard import pandasdal as dal
+
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +20,7 @@ st.title('Analisi lotteria italia')
 st.write(f'''
         Dashboard per analisi vincite Lotteria Italia 2024 - 2025
         
-        stato della connessione: {sqldal.get_connection_status()}
+        stato della connessione: {dal.get_connection_status()}
         ''')
 
 
@@ -42,7 +44,7 @@ with st.sidebar:
     )
 
 
-
+df  = dal.get_winners().copy()
 with st.sidebar:
 
     st.subheader('Geograficamente')
@@ -50,7 +52,7 @@ with st.sidebar:
     prov = st.selectbox(
         label='seleziona una provincia',
         index=None,
-        options=sqldal.get_prov(),
+        options=dal.get_prov(df, link),
         key='prov',
         placeholder='Non selezionato'
     )
@@ -59,11 +61,10 @@ with st.sidebar:
     luogo = st.selectbox(
         label='digita parte del luogo',
         index=None,
-        options=sqldal.get_luogo(prov=prov if link else None),
+        options=dal.get_luogo(df, link, Prov=prov),
         key='luogo',
         placeholder='Non selezionato'
     )
-
 
 with st.sidebar:
     st.subheader('Biglietto')
@@ -76,29 +77,38 @@ with st.sidebar:
     serie = st.selectbox(
         label='seleziona una serie',
         index=None,
-        options=sqldal.get_serie(),
+        options=dal.get_serie(df, link, Prov=prov, Luogo=luogo),
         key='serie',
         placeholder='Non selezionato',
-        on_change=reset_geo
+        # on_change=reset_geo
     )
 
     numero = st.selectbox(
         label='seleziona una numero',
         index=None,
-        options=sqldal.get_numero(serie=serie),
+        options=dal.get_numero(df, link, Prov=prov, Luogo=luogo, Serie=serie),
         key='numero',
         placeholder='Non selezionato',
-        on_change=reset_geo
+        # on_change=reset_geo
     )
 
 
 with st.sidebar:
     st.subheader('Premio')
+    
     categoria = st.selectbox(
         label='seleziona una categoria',
         index=None,
-        options=sqldal.get_categoria(),
+        options=dal.get_categoria(df, link, Prov=prov, Luogo=luogo, Serie=serie, Numero=numero),
         key='categoria',
+        placeholder='Non selezionato'
+    )
+    
+    premio = st.selectbox(
+        label='seleziona premio',
+        index=None,
+        options=dal.get_premio(df, link, Prov=prov, Luogo=luogo, Serie=serie, Numero=numero, Categoria=categoria),
+        key='premio',
         placeholder='Non selezionato'
     )
 
@@ -107,12 +117,13 @@ with st.sidebar:
 
 
 # winners = get_winners(category=3, prov='MI')
-winners = sqldal.get_winners(
+winners = dal.get_winners(
     prov=prov, 
     luogo=luogo, 
     categoria=categoria,
     serie=serie,
-    numero=numero
+    numero=numero,
+    premio=premio
 )
 # st.write(winners
         # .head()
