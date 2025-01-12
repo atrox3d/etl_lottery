@@ -6,6 +6,7 @@ from traitlets import default
 
 # from dashboard import sqldal as dal
 from dashboard import pandasdal as dal
+import fixselect
 
 
 def console_space(rows=10):
@@ -25,8 +26,8 @@ def reset_widgets():
             del st.session_state[el]
             # print(st.session_state[el])
             # st.session_state[el] = None
-        
-    st.session_state.clear()
+    if fixselect.CLEAR_STATE:
+        st.session_state.clear()
     
     console_space()
 
@@ -35,8 +36,13 @@ def fix_widgets_reload():
     ''' Interrupting the widget clean-up process 
         https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
     '''
-    logger.warning('NOT SELF ASSIGNING SESSION STATE')
-    return
+
+    if not fixselect.FIX_WIDGETS:
+        # returning immediately causes select boxes do not keep values
+        # while st.session_state does
+        logger.warning('NOT SELF ASSIGNING SESSION STATE')
+        return
+
     for k, v in st.session_state.items():
         st.session_state[k] = v
 ###############################################################################
@@ -90,7 +96,7 @@ with st.sidebar:
     
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
-        index=None,
+        index=None if fixselect.FIX_INDEX else 0,
         options=dal.get_prov(df, link,
                             **st.session_state
         ),
