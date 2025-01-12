@@ -1,11 +1,7 @@
 import logging
-import pandas as pd
-import numpy as np
 import streamlit as st
-from traitlets import default
 
 from dashboard import pandasdal as dal
-# import dashboard.fixselect as fixselect
 from dashboard import fixselect
 from dashboard import helpers
 

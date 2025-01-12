@@ -1,13 +1,12 @@
 import logging
 import streamlit as st
 
-import dashboard.fixselect as fixselect
+from dashboard import fixselect
 
 logger = logging.getLogger(__name__)
 
 
-
-def console_space(rows=10):
+def console_space(rows=5):
     ''' create some space in the console output '''
 
     for _ in range(rows):
