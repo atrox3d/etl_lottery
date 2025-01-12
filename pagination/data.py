@@ -16,4 +16,3 @@ def split_df(df:pd.DataFrame, rows:int):
     ]
     
     return splitdf
-
