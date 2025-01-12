@@ -8,15 +8,18 @@ from dashboard import helpers
 
 ###############################################################################
 #
-#   setup logging and dataframe
+#   setup logging, dataframe, gui fixes
 #
 ###############################################################################
 logger = logging.getLogger(__name__)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
+
 df  = dal.get_winners().copy()
+
 helpers.fix_widgets_reload()
 ###############################################################################
 #
