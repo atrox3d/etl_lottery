@@ -6,7 +6,7 @@ from traitlets import default
 
 # from dashboard import sqldal as dal
 from dashboard import pandasdal as dal
-import fixselect
+import dashboard.fixselect as fixselect
 
 
 def console_space(rows=10):
