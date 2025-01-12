@@ -18,6 +18,7 @@ logging.basicConfig(
 df  = dal.get_winners().copy()
 
 helpers.fix_widgets_reload()
+
 #   title
 st.title('Analisi lotteria italia')
 st.write(f'''
@@ -25,6 +26,7 @@ st.write(f'''
     
     stato della connessione: {dal.get_connection_status()}
 ''')
+
 with st.sidebar:
     show_count, show_state = header.display_options()
 

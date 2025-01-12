@@ -2,7 +2,9 @@ import pandas as pd
 import streamlit as st
 from dashboard import helpers, fixselect, pandasdal as dal
 
+
 def display_options() -> tuple[bool, bool]:
+    
     show_count = st.checkbox(
         label='show count',
         value=True,
@@ -29,6 +31,7 @@ def filter_options() -> bool:
 
 
 def geo_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
         index=None if fixselect.FIX_INDEX else 0,
@@ -49,6 +52,7 @@ def geo_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
 
 
 def ticket_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
         index=None,
@@ -71,6 +75,7 @@ def ticket_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
 
 
 def prize_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    
     categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',
         index=None,
