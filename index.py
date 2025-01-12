@@ -4,47 +4,12 @@ import numpy as np
 import streamlit as st
 from traitlets import default
 
-# from dashboard import sqldal as dal
 from dashboard import pandasdal as dal
-import dashboard.fixselect as fixselect
+# import dashboard.fixselect as fixselect
+from dashboard import fixselect
+from dashboard import helpers
 
 
-def console_space(rows=10):
-    ''' create some space in the console output '''
-    
-    return
-    for _ in range(rows):
-        logger.info('') 
-
-
-def reset_widgets():
-    ''' reset widgets '''
-    logger.info('RESETTING WIDGETS')
-    for el in st.session_state:
-        if el not in ['link']:
-            logger.info(f'resetting {el}')
-            del st.session_state[el]
-            # print(st.session_state[el])
-            # st.session_state[el] = None
-    if fixselect.CLEAR_STATE:
-        st.session_state.clear()
-    
-    console_space()
-
-
-def fix_widgets_reload():
-    ''' Interrupting the widget clean-up process 
-        https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
-    '''
-
-    if not fixselect.FIX_WIDGETS:
-        # returning immediately causes select boxes do not keep values
-        # while st.session_state does
-        logger.warning('NOT SELF ASSIGNING SESSION STATE')
-        return
-
-    for k, v in st.session_state.items():
-        st.session_state[k] = v
 ###############################################################################
 #
 #   setup logging and dataframe
@@ -56,7 +21,7 @@ logging.basicConfig(
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 df  = dal.get_winners().copy()
-fix_widgets_reload()
+helpers.fix_widgets_reload()
 ###############################################################################
 #
 #   title
@@ -94,7 +59,7 @@ with st.sidebar:
     )
 
     st.button('reset filtri',
-        on_click=reset_widgets
+        on_click=helpers.reset_widgets
     )
 ###############################################################################
 #
@@ -125,11 +90,6 @@ with st.sidebar:
 #
 ###############################################################################
     st.subheader('Biglietto')
-    
-    def reset_geo():
-        for elem in ['prov', 'luogo']:
-            st.session_state[elem] = None
-            
     
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
@@ -197,4 +157,4 @@ if show_count:
 if show_state:
     st.session_state
 
-console_space()
+helpers.console_space()
