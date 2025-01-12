@@ -68,13 +68,22 @@ st.write(f'''
     
     stato della connessione: {dal.get_connection_status()}
 ''')
+with st.sidebar:
+    show_count = st.checkbox(
+        label='show count',
+        value=True,
+        # key='link'
+    )
+    show_state = st.checkbox(
+        label='show state',
+        value=True,
+        # key='link'
+    )
 ###############################################################################
 #
 #   sidebar header filtri
 #
 ###############################################################################
-with st.sidebar:
-    
     st.header('Filtri')
     st.write('Usare le opzioni per filtrare i dati')
     
@@ -92,14 +101,12 @@ with st.sidebar:
 #   sidebar subheader geo
 #
 ###############################################################################
-    st.subheader('Geograficamente')
+    st.subheader('Geografia')
     
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
         index=None if fixselect.FIX_INDEX else 0,
-        options=dal.get_prov(df, link,
-                            **st.session_state
-        ),
+        options=dal.get_prov(df, link, **st.session_state),
         key='prov',
         placeholder='Non selezionato'
     )
@@ -108,9 +115,7 @@ with st.sidebar:
     luogo = st.selectbox(                                                   # LUOGO
         label='digita parte del luogo',
         index=None,
-        options=dal.get_luogo(df, link, 
-                            **st.session_state
-        ),
+        options=dal.get_luogo(df, link, **st.session_state),
         key='luogo',
         placeholder='Non selezionato'
     )
@@ -129,9 +134,7 @@ with st.sidebar:
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
         index=None,
-        options=dal.get_serie(df, link,
-                            **st.session_state
-        ),
+        options=dal.get_serie(df, link, **st.session_state),
         key='serie',
         placeholder='Non selezionato',
         # on_change=reset_geo
@@ -140,9 +143,7 @@ with st.sidebar:
     numero = st.selectbox(                                                  # NUMERO
         label='seleziona una numero',
         index=None,
-        options=dal.get_numero(df, link, 
-                            **st.session_state
-        ),
+        options=dal.get_numero(df, link, **st.session_state),
         key='numero',
         placeholder='Non selezionato',
         # on_change=reset_geo
@@ -157,9 +158,7 @@ with st.sidebar:
     categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',
         index=None,
-        options=dal.get_categoria(df, link, 
-                            **st.session_state
-        ),
+        options=dal.get_categoria(df, link, **st.session_state),
         key='categoria',
         placeholder='Non selezionato'
     )
@@ -167,9 +166,7 @@ with st.sidebar:
     premio = st.selectbox(                                                  # PREMIO
         label='seleziona premio',
         index=None,
-        options=dal.get_premio(df, link, 
-                            **st.session_state
-        ),
+        options=dal.get_premio(df, link, **st.session_state),
         key='premio',
         placeholder='Non selezionato'
     )
@@ -188,15 +185,16 @@ winners = dal.get_winners(
     numero=numero,
     premio=premio
 )
-# st.write(winners
-        # .head()
-    # )
+
 st.dataframe(
     winners, 
     hide_index=True
 )
-st.write(len(winners))
 
-st.session_state
+if show_count:
+    st.write(len(winners))
+
+if show_state:
+    st.session_state
 
 console_space()
