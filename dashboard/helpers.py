@@ -15,6 +15,7 @@ def console_space(rows=5):
 
 def reset_widgets():
     ''' reset widgets '''
+    
     logger.info('RESETTING WIDGETS')
     for el in st.session_state:
         if el not in ['link']:
@@ -44,5 +45,7 @@ def fix_widgets_reload():
 
 
 def reset_geo():
+    ''' resets geo section of widgets '''
+    
     for elem in ['prov', 'luogo']:
         st.session_state[elem] = None
