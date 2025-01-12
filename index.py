@@ -51,12 +51,8 @@ with st.sidebar:
     st.header('Filtri')
     st.write('Usare le opzioni per filtrare i dati')
     
-    link = st.checkbox(
-        label='filtri collegati',
-        value=True,
-        # key='link'
-    )
-
+    link = st.checkbox( label='filtri collegati', value=True, )
+    
     st.button('reset filtri',
         on_click=helpers.reset_widgets
     )
@@ -75,7 +71,6 @@ with st.sidebar:
         placeholder='Non selezionato'
     )
 
-    # st.sidebar.subheader('Luogo')
     luogo = st.selectbox(                                                   # LUOGO
         label='digita parte del luogo',
         index=None,
@@ -135,20 +130,9 @@ with st.sidebar:
 #
 ###############################################################################
 
-# winners = get_winners(category=3, prov='MI')
-winners = dal.get_winners(
-    prov=prov, 
-    luogo=luogo, 
-    categoria=categoria,
-    serie=serie,
-    numero=numero,
-    premio=premio
-)
+winners = dal.get_winners(**st.session_state)
 
-st.dataframe(
-    winners, 
-    hide_index=True
-)
+st.dataframe( winners, hide_index=True )
 
 if show_count:
     st.write(len(winners))
