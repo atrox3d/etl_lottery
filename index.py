@@ -35,7 +35,8 @@ def fix_widgets_reload():
     ''' Interrupting the widget clean-up process 
         https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
     '''
-    
+    logger.warning('NOT SELF ASSIGNING SESSION STATE')
+    return
     for k, v in st.session_state.items():
         st.session_state[k] = v
 ###############################################################################
