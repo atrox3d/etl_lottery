@@ -18,8 +18,6 @@ def display_options() -> tuple[bool, bool]:
 
 
 def filter_options() -> bool:
-    st.header('Filtri')
-    st.write('Usare le opzioni per filtrare i dati')
     
     link = st.checkbox( label='filtri collegati', value=True, )
     

@@ -7,9 +7,7 @@ from dashboard import helpers
 from dashboard import header
 
 
-###############################################################################
 #   setup logging, dataframe, gui fixes
-###############################################################################
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
@@ -20,9 +18,7 @@ logging.basicConfig(
 df  = dal.get_winners().copy()
 
 helpers.fix_widgets_reload()
-###############################################################################
 #   title
-###############################################################################
 st.title('Analisi lotteria italia')
 st.write(f'''
     Dashboard per analisi vincite Lotteria Italia 2024 - 2025
@@ -31,35 +27,29 @@ st.write(f'''
 ''')
 with st.sidebar:
     show_count, show_state = header.display_options()
-###############################################################################
-#   sidebar header filtri
-###############################################################################
-    link = header.filter_options()
-###############################################################################
-#   sidebar subheader geo
-###############################################################################
-    st.subheader('Geografia')
-    
-    prov, luogo = header.geo_filters(df, link)
-###############################################################################
-#   sidebar subheader biglietto
-###############################################################################
-    st.subheader('Biglietto')
-    
-    serie, numero = header.ticket_filters(df, link)
-###############################################################################
-#   sidebar subheader premio
-###############################################################################
-    st.subheader('Premio')
-    
-    categoria, premio = header.prize_filters(df, link)
-###############################################################################
-#   TABLE
-###############################################################################
-winners = dal.get_winners(**st.session_state)
 
+    #   sidebar header filtri
+    st.header('Filtri')
+    st.write('Usare le opzioni per filtrare i dati')    
+    link = header.filter_options()
+    
+    #   sidebar subheader geo
+    st.subheader('Geografia')
+    prov, luogo = header.geo_filters(df, link)
+    
+    #   sidebar subheader biglietto
+    st.subheader('Biglietto')
+    serie, numero = header.ticket_filters(df, link)
+    
+    #   sidebar subheader premio
+    st.subheader('Premio')
+    categoria, premio = header.prize_filters(df, link)
+    
+#   TABLE
+winners = dal.get_winners(**st.session_state)
 st.dataframe( winners, hide_index=True )
 
+#   info
 if show_count:
     st.write(len(winners))
 
