@@ -64,24 +64,24 @@ def paginated_df(
             
             left, right = st.columns(2)
             
-            def left_page():
+            def previous_page():
                 if st.session_state.page > 1:
                     st.session_state.page -= 1
 
-            def right_page():
+            def next_page():
                 if st.session_state.page < total_pages:
                     st.session_state.page += 1
             
             with left:
                 st.button(
                     'left', 
-                    on_click=left_page,
+                    on_click=previous_page,
                     disabled=current_page==1
                 )
             with right:
                 st.button(
                     'right', 
-                    on_click=right_page,
+                    on_click=next_page,
                     disabled=current_page==total_pages
                 )
 
