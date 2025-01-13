@@ -19,6 +19,8 @@ def paginated_df(
     logger.info(f'{df = }')
     logger.info(f'{len(df) = }')
 
+    df = df.reset_index(drop=True)
+    
     if sort_menu:
         upleft_menu, upcenter_menu, upright_menu = st.columns(3)
 
@@ -33,7 +35,11 @@ def paginated_df(
                 with upright_menu:
                     sort_dir = st.radio('Direction', options=['⬆️', '⬇️'], horizontal=True)
                 
-                df = df.sort_values(by=sort_field, ascending=sort_dir=='⬆️', ignore_index=True)
+                df = df.sort_values(
+                    by=sort_field, 
+                    ascending=sort_dir=='⬆️', 
+                    ignore_index=True
+                )
     
     
     paginated = st.container()
