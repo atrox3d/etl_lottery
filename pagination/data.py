@@ -11,7 +11,7 @@ def load_csv(file_path:str) -> pd.DataFrame:
 
 @st.cache_data
 def split_df(df:pd.DataFrame, rows:int) -> list[pd.DataFrame]:
-    splitdf = [df.loc[i: i+rows -1, :] for i in range(
+    splitdf = [df.iloc[i: i+rows -1, :] for i in range(
                 0, len(df), rows)
     ]
     
