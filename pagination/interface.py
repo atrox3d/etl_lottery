@@ -73,9 +73,17 @@ def paginated_df(
                     st.session_state.page += 1
             
             with left:
-                st.button('left', on_click=left_page)
+                st.button(
+                    'left', 
+                    on_click=left_page,
+                    disabled=current_page==1
+                )
             with right:
-                st.button('right', on_click=right_page)
+                st.button(
+                    'right', 
+                    on_click=right_page,
+                    disabled=current_page==total_pages
+                )
 
         splitdf = data.split_df(df, batch_size)
         paginated.dataframe(
