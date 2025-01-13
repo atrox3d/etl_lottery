@@ -86,8 +86,7 @@ def paginated_df(
                 )
 
         splitdf = data.split_df(df, batch_size)
-        paginated.dataframe(
-            data=splitdf[current_page-1], 
+        paginated.table(
             use_container_width=True,
             hide_index=hide_index
         )
