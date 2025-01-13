@@ -31,10 +31,6 @@ def get_connection_status() -> str:
     return connection_status
 
 
-def filter_dict(**kwargs) -> dict:
-    return {k:v for k, v in kwargs.items() if v}
-
-
 def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> str:
     ''' format sql like value to parametrize queries '''
     
@@ -56,8 +52,9 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     conditions = []
     params = []
     
-    kwargs = filter_dict(**kwargs)
+    kwargs = filter_dict_nulls(**kwargs)
     logger.info(f'{kwargs = }')
+    
     if kwargs:
         for condition, param in kwargs.items():
             if condition.endswith('__like'):
@@ -78,44 +75,76 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     return sql, params
 
 
+def filter_dict_nulls(**kwargs) -> dict:
+    return {k:v for k, v in kwargs.items() if v}
+
+
+def filter_dict_df_keys(df:pd.DataFrame, **state) -> dict:
+    return {k:v for k, v in state.items() if k in df.columns}
+
+
+@st.cache_data
+def get_empty_winners() -> pd.DataFrame:
+    db_url = get_db_url(**config)
+    engine = create_engine(db_url)
+    
+    empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', engine, index_col='index')
+    
+    return empty_df
+
 @st.cache_data(ttl=CACHE_TTL)
 def get_winners(
-            categoria:int=None, 
-            luogo:str=None, 
-            prov:str=None,
-            serie:str=None,
-            numero:str=None,
-            premio:int=None
+            # categoria:int=None, 
+            # luogo:str=None, 
+            # prov:str=None,
+            # serie:str=None,
+            # numero:str=None,
+            # premio:int=None
+            **fields
 ) -> pd.DataFrame:
     ''' get filtered df from mysql db '''
     
     db_url = get_db_url(**config)
     engine = create_engine(db_url)
 
-    params = filter_dict(
-            categoria=categoria, 
-            luogo=luogo, 
-            prov=prov,
-            serie=serie,
-            numero=numero,
-            premio=premio
+    logger.debug(f'{fields = }')
+    params = filter_dict_df_keys(
+            get_empty_winners(),
+            **fields
     )
-    
-    logger.info(f'{params = }')
+    logger.debug(f'{params = }')
+
+    params = filter_dict_nulls(
+            **params
+            # categoria=categoria, 
+            # luogo=luogo, 
+            # prov=prov,
+            # serie=serie,
+            # numero=numero,
+            # premio=premio
+    )
+    logger.debug(f'{params = }')
+
     
     sql, params = query_builder(
         'SELECT * FROM lotteria', 
-        categoria=categoria, 
-        luogo=luogo, 
-        prov=prov,
-        serie=serie,
-        numero=numero,
-        premio=premio
+        **params
+        # categoria=categoria, 
+        # luogo=luogo, 
+        # prov=prov,
+        # serie=serie,
+        # numero=numero,
+        # premio=premio
     )
-    return pd.read_sql(sql, engine, params=tuple(params), index_col='index')
+    logger.debug(f'{params = }')
+    logger.debug(f'{sql = }')
+    
+    df =  pd.read_sql(sql, engine, params=tuple(params), index_col='index')
+    logger.debug(df)
+    logger.debug(len(df))
+    
+    return df
 
-def filter_df_state(df:pd.DataFrame, **state) -> dict:
-    return {k:v for k, v in state.items() if k in df.columns}
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
@@ -123,7 +152,7 @@ def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     
     logger.debug(f'{name = }, {link = }, {kwargs = }')
     
-    filtered_kwargs = filter_df_state(df, **kwargs)
+    filtered_kwargs = filter_dict_df_keys(df, **kwargs)
     logger.debug(f'{name = }, {link = }, {filtered_kwargs = }')
     
     if link:

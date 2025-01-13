@@ -1,8 +1,12 @@
+import logging
 import streamlit as st
 import pandas as pd
 import numpy as np
 
 from pagination import data
+
+
+logger = logging.getLogger(__name__)
 
 
 def paginated_df(
@@ -11,7 +15,10 @@ def paginated_df(
         navigation_menu:bool=True,
         hide_index:bool=True
 ):
-    
+
+    logger.info(f'{df = }')
+    logger.info(f'{len(df) = }')
+
     if sort_menu:
         upleft_menu, upcenter_menu, upright_menu = st.columns(3)
 

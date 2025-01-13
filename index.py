@@ -11,11 +11,14 @@ from pagination import interface
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
 df  = dal.get_winners().copy()
+logger.info(f'{df = }')
+logger.info(f'{len(df) = }')
+
 
 helpers.fix_widgets_reload()
 
@@ -48,8 +51,10 @@ with st.sidebar:
     categoria, premio = header.prize_filters(df, link)
     
 #   TABLE
-winners = dal.get_winners(**dal.filter_df_state(df, **st.session_state))
+winners = dal.get_winners(**dal.filter_dict_df_keys(df, **st.session_state))
 # st.dataframe( winners, hide_index=True )
+logger.info(f'{winners = }')
+logger.info(f'{len(winners) = }')
 interface.paginated_df(winners)
 #   info
 if show_count:
