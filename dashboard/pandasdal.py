@@ -114,14 +114,20 @@ def get_winners(
     )
     return pd.read_sql(sql, engine, params=tuple(params), index_col='index')
 
+def filter_df_state(df:pd.DataFrame, **state) -> dict:
+    return {k:v for k, v in state.items() if k in df.columns}
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     ''' get df column applying conditions '''
     
-    logger.debug(f'{name}, {link}, {kwargs}')
+    logger.debug(f'{name = }, {link = }, {kwargs = }')
+    
+    filtered_kwargs = filter_df_state(df, **kwargs)
+    logger.debug(f'{name = }, {link = }, {filtered_kwargs = }')
+    
     if link:
-        for col, val in kwargs.items():
+        for col, val in filtered_kwargs.items():
             if val is not None:
                 df = df[df[col]==val]
     return df[name]

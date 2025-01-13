@@ -1,5 +1,6 @@
 import logging
 import streamlit as st
+import pandas as pd
 
 from dashboard import fixselect
 

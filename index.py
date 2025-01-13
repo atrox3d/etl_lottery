@@ -2,9 +2,9 @@ import logging
 import streamlit as st
 
 from dashboard import pandasdal as dal
-from dashboard import fixselect
 from dashboard import helpers
 from dashboard import header
+from pagination import interface
 
 
 #   setup logging, dataframe, gui fixes
@@ -48,9 +48,9 @@ with st.sidebar:
     categoria, premio = header.prize_filters(df, link)
     
 #   TABLE
-winners = dal.get_winners(**st.session_state)
-st.dataframe( winners, hide_index=True )
-
+winners = dal.get_winners(**dal.filter_df_state(df, **st.session_state))
+# st.dataframe( winners, hide_index=True )
+interface.paginated_df(winners)
 #   info
 if show_count:
     st.write(len(winners))
