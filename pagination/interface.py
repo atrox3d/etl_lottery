@@ -5,7 +5,12 @@ import numpy as np
 from pagination import data
 
 
-def paginated_df(df:pd.DataFrame, sort_menu:bool=True, navigation_menu:bool=True):
+def paginated_df(
+        df:pd.DataFrame, 
+        sort_menu:bool=True, 
+        navigation_menu:bool=True,
+        hide_index:bool=True
+):
     
     if sort_menu:
         upleft_menu, upcenter_menu, upright_menu = st.columns(3)
@@ -60,5 +65,9 @@ def paginated_df(df:pd.DataFrame, sort_menu:bool=True, navigation_menu:bool=True
                 st.button('right', on_click=right_page)
 
         splitdf = data.split_df(df, batch_size)
-        paginated.dataframe(data=splitdf[current_page-1], use_container_width=True)
+        paginated.dataframe(
+            data=splitdf[current_page-1], 
+            use_container_width=True,
+            hide_index=hide_index
+        )
 
