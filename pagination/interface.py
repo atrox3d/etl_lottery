@@ -89,6 +89,7 @@ def paginated_df(
         paginated.dataframe(
             data=splitdf[current_page-1], 
             use_container_width=True,
-            hide_index=hide_index
+            hide_index=hide_index,
         )
+
 
