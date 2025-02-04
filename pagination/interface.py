@@ -60,7 +60,7 @@ def paginated_df(
                 )
                 
         with dnleft_menu:
-            st.markdown(f'Page **{current_page}** of **{total_pages}**')
+            st.markdown(f'Page **{current_page}** of **{total_pages}** - (total: {len(df)} rows)')
             
             left, right = st.columns(2)
             
