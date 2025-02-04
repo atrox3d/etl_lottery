@@ -1,8 +1,10 @@
 import logging
+from sqlalchemy import create_engine
 
 import mysql.connector
 from mysql.connector import MySQLConnection
 from sqlalchemy import URL
+import sqlalchemy
 from .config import get_default_config
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,17 @@ def get_db(
     logger.debug(f'{__DB.connection_id = }')
     logger.debug(f'{__DB.database = }')
     return __DB
+
+
+def get_engine(**conn_args) -> sqlalchemy.Engine:
+    logger.debug(f'{conn_args = }')
+    config = conn_args.get('config') or get_default_config()
+        
+    logger.debug(f'{config = }')
+    db_url = get_db_url(**config)
+    engine = create_engine(db_url)
+    
+    return engine
 
 
 def test_connection(**conn_args) -> bool:

@@ -1,13 +1,11 @@
 # from mysql.connector import MySQLConnection
 import logging
 import pandas as pd
-import numpy as np
 import streamlit as st
 from sqlalchemy import create_engine
-from sqlalchemy import URL
 
 from dbhelpers.config import build_config
-from dbhelpers.db import get_db, test_connection, get_db_url
+from dbhelpers.db import get_engine, test_connection, get_db_url
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +19,9 @@ config = build_config(database=DB_NAME)
 def get_connection_status() -> str:
     ''' get connection status as string'''
     
-    try:
-        user, server, port = test_connection(config)
+    if test_connection(config=config):
         connection_status = 'OK'
-    except Exception as e:
+    else:
         connection_status = 'ERRORE'
     
     logger.info(f'connection status: {connection_status}')
@@ -85,27 +82,21 @@ def filter_dict_df_keys(df:pd.DataFrame, **state) -> dict:
 
 @st.cache_data
 def get_empty_winners() -> pd.DataFrame:
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
-    
+    # db_url = get_db_url(**config)
+    engine = get_engine(config=config)
     empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', engine, index_col='index')
     
     return empty_df
 
+
 @st.cache_data(ttl=CACHE_TTL)
 def get_winners(
-            # categoria:int=None, 
-            # luogo:str=None, 
-            # prov:str=None,
-            # serie:str=None,
-            # numero:str=None,
-            # premio:int=None
             **fields
 ) -> pd.DataFrame:
     ''' get filtered df from mysql db '''
     
-    db_url = get_db_url(**config)
-    engine = create_engine(db_url)
+    # db_url = get_db_url(**config)
+    engine = get_engine(config=config)
 
     logger.debug(f'{fields = }')
     params = filter_dict_df_keys(
