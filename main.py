@@ -1,6 +1,8 @@
 import typer
 import logging
 
+from commands import etl
+
 logger = logging.getLogger(__name__)
 
 app = typer.Typer(
@@ -8,8 +10,11 @@ app = typer.Typer(
     no_args_is_help = False   # need to always execute main callback
 )
 
+app.add_typer(etl.app, name='etl')
+
 INPUT_PATH = 'data/in/lotteria.html'
 DB_NAME = 'testing'
+
 
 @app.command()
 def main():
