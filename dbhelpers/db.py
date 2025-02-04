@@ -3,8 +3,7 @@ import logging
 import mysql.connector
 from mysql.connector import MySQLConnection
 from sqlalchemy import URL
-from dbhelpers.config import build_config, load_config, get_default_config
-from etl.load import logger
+from .config import build_config, load_config, get_default_config
 
 logger = logging.getLogger(__name__)
 
@@ -25,31 +24,21 @@ def get_db(config:dict=get_default_config()) -> MySQLConnection:
     return __DB
 
 
-def test_connection(config:dict|None=None) -> tuple:
+def test_connection(config:dict|None=None) -> bool:
     ''' 
     tests the connection
     returns user, host, port
     '''
-    db = get_db(config or get_default_config())
-    assert db.is_connected()
-    
-    db.close()
-    assert not db.is_connected()
-    
-    return(
-            db.user,
-            db.server_host,
-            db.server_port,
-    )
-
-
-if __name__ == "__main__":
     try:
-        user, server, port = test_connection()
-        print('SUCCESS| ', f'{user}@{server}:{port}')
-    except Exception as e:
-        print('ERROR |', e.__class__.__qualname__)
-        print('ERROR |', e)
+        db = get_db(config or get_default_config())
+        assert db.is_connected()
+        
+        db.close()
+        assert not db.is_connected()
+        return True
+    except:
+        logger.critical('connection failed')
+        return False
 
 
 def get_db_url(
@@ -69,3 +58,14 @@ def get_db_url(
         database=database,
     )
     return url_object
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(levelname)s | %(funcName)s | %(message)s'
+    )
+    if test_connection():
+        logger.info('Success connecting to db')
+    else:
+        logger.error('Failed connecting to db')
