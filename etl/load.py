@@ -16,7 +16,7 @@ def load_to_mysql(df:pd.DataFrame, url_object:URL):
     logger.info(f'host      : {url_object.host}')
     logger.info(f'user      : {url_object.username}')
     logger.info(f'password  : {url_object.password}')
-    logger.info(f'databse   : {url_object.database}')
+    logger.info(f'database  : {url_object.database}')
     engine = create_engine(url_object)
     
     logger.info('loading to mysql')
