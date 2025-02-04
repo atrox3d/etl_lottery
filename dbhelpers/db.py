@@ -29,11 +29,14 @@ def get_db(
     return __DB
 
 
-def test_connection(config:dict|None=None) -> bool:
+def test_connection(**conn_args) -> bool:
     ''' 
     tests the connection, returns True or False, logs error
     '''
     try:
+        logger.debug(f'{conn_args = }')
+        config = conn_args.get('config')
+        
         logger.debug(f'{config = }')
         db = get_db(config=config)
         assert db.is_connected()
