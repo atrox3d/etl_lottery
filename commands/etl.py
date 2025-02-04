@@ -4,7 +4,7 @@ import typer
 from dbhelpers.db import get_db_url
 from etl.extract import get_df_from_html
 from etl.load import load_to_mysql, load_to_sqlite
-from dbhelpers.config import build_config
+from dbhelpers.mysql.config import build_config
 
 logger = logging.getLogger(__name__)
 
