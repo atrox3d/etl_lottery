@@ -16,9 +16,6 @@ app = typer.Typer()
 
 @app.command()
 def html2mysql(replace: bool = True, index: bool = True):
-    logging.basicConfig(
-        level=logging.INFO
-    )
     logger.info('start etl process')
     
     logger.info(f'loading data')
@@ -44,9 +41,6 @@ def html2sqlite(
         replace : bool = True, 
         index   : bool = True
     ):
-    logging.basicConfig(
-        level=logging.INFO
-    )
     logger.info('start etl process')
     
     logger.info(f'loading data')
