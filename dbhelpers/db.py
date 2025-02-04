@@ -3,17 +3,22 @@ import logging
 import mysql.connector
 from mysql.connector import MySQLConnection
 from sqlalchemy import URL
-from .config import build_config, load_config, get_default_config
+from .config import get_default_config
 
 logger = logging.getLogger(__name__)
 
 __DB: MySQLConnection = None
 
 
-def get_db(config:dict=get_default_config()) -> MySQLConnection:
-    ''' returns new connection'''
+def get_db(
+        **conn_args       # can accept config, or dbpath...
+) -> MySQLConnection:
+    ''' returns new or existing connection'''
     global __DB
     
+    logger.debug(f'{conn_args = }')
+    config = conn_args.get('config') or get_default_config()
+        
     logger.debug(f'{config = }')
     
     if __DB is None or not __DB.is_connected():
@@ -26,11 +31,11 @@ def get_db(config:dict=get_default_config()) -> MySQLConnection:
 
 def test_connection(config:dict|None=None) -> bool:
     ''' 
-    tests the connection
-    returns user, host, port
+    tests the connection, returns True or False, logs error
     '''
     try:
-        db = get_db(config or get_default_config())
+        logger.debug(f'{config = }')
+        db = get_db(config=config)
         assert db.is_connected()
         
         db.close()
