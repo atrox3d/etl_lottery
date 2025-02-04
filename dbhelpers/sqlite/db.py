@@ -20,7 +20,8 @@ def get_db(
     global __DB
     
     logger.debug(f'{conn_args = }')
-    dbpath = conn_args.get('dpbath')
+    dbpath = conn_args.get('dbpath')
+    logger.debug(f'{dbpath = }')
     if not dbpath:
         raise ValueError('dbpath is required')
     logger.debug(f'{dbpath = }')
@@ -60,8 +61,9 @@ def test_connection(**conn_args) -> bool:
         logger.debug(f'{dbpath = }')
         db = get_db(dbpath=dbpath)
         return True
-    except:
+    except Exception as e:
         logger.critical('connection failed')
+        logger.critical(e)
         return False
 
 
