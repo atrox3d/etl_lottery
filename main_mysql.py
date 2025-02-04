@@ -1,6 +1,6 @@
 import logging
 
-from dbhelpers.db import get_db_url
+from dbhelpers.mysql.db import get_db_url
 from etl.extract import get_df_from_html
 from etl.load import load_to_mysql
 from dbhelpers.mysql.config import build_config

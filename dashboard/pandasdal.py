@@ -5,7 +5,7 @@ import streamlit as st
 from sqlalchemy import create_engine
 
 from dbhelpers.mysql.config import build_config
-from dbhelpers.db import get_engine, test_connection, get_db_url
+from dbhelpers.mysql.db import get_engine, test_connection, get_db_url
 
 logger = logging.getLogger(__name__)
 
