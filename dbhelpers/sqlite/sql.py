@@ -1,12 +1,12 @@
 import logging
-from dbhelpers.mysql.db import get_db
-from mysql.connector import MySQLConnection
+from dbhelpers.sqlite.db import get_db
+import sqlite3
 
 logger = logging.getLogger(__name__)
 
 def exec_statement(
     stmt:str, *args,
-    db:MySQLConnection=None,
+    db:sqlite3.Connection=None,
     commit:bool=False,
     # close:bool=False
 ):
@@ -33,7 +33,7 @@ def exec_statement(
     return result
 
 
-def drop_table(name:str, db:MySQLConnection=None):
+def drop_table(name:str, db:sqlite3.Connection=None):
     ''' drops a table '''
     db = db or get_db()
     logger.info(f'dropping table: {name}')
