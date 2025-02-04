@@ -107,12 +107,6 @@ def get_winners(
 
     params = filter_dict_nulls(
             **params
-            # categoria=categoria, 
-            # luogo=luogo, 
-            # prov=prov,
-            # serie=serie,
-            # numero=numero,
-            # premio=premio
     )
     logger.debug(f'{params = }')
 
@@ -120,12 +114,6 @@ def get_winners(
     sql, params = query_builder(
         'SELECT * FROM lotteria', 
         **params
-        # categoria=categoria, 
-        # luogo=luogo, 
-        # prov=prov,
-        # serie=serie,
-        # numero=numero,
-        # premio=premio
     )
     logger.debug(f'{params = }')
     logger.debug(f'{sql = }')
