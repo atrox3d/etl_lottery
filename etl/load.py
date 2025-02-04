@@ -9,6 +9,7 @@ from sqlalchemy import URL
 
 logger = logging.getLogger(__name__)
 
+
 def load_to_mysql(
         df          :pd.DataFrame, 
         url_object  :URL,
@@ -30,6 +31,31 @@ def load_to_mysql(
     engine = create_engine(url_object)
     
     logger.info('loading to mysql')
+    df.to_sql(
+        name='lotteria', 
+        con=engine, 
+        if_exists=replace, 
+        index=index
+    )
+
+
+def load_to_sqlite(
+        df          :pd.DataFrame, 
+        url         :str,
+        replace     :bool = True,
+        index       :bool = True
+):
+
+    logger.info('creating engine')
+    logger.info(f'database  : {url}')
+    
+    replace = 'replace' if replace else 'fail'
+    logger.info(f'replace   : {replace}')
+    logger.info(f'index     : {index}')
+    
+    engine = create_engine(url)
+    
+    logger.info('loading to sqlite')
     df.to_sql(
         name='lotteria', 
         con=engine, 
