@@ -23,7 +23,7 @@ def filter_dict_nulls(**kwargs) -> dict:
     return {k:v for k, v in kwargs.items() if v}
 
 
-def query_builder(sql:str, operator='AND', **kwargs) -> str:
+def query_builder(sql:str, operator='AND', **kwargs) -> tuple[str, dict]:
     ''' dynamically creates queries vases on kwargs '''
 
     conditions = []

@@ -3,7 +3,7 @@ import logging
 from typing import Callable
 import pandas as pd
 import streamlit as st
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text
 
 from dbhelpers.querybuilder import filter_dict_nulls, query_builder
 
@@ -61,7 +61,7 @@ def get_winners( _engine:Engine, **fields ) -> pd.DataFrame:
     logger.debug(f'{params = }')
     logger.debug(f'{sql = }')
     
-    df =  pd.read_sql(sql, _engine, params=tuple(params), index_col='index')
+    df =  pd.read_sql(text(sql), _engine, params=params, index_col='index')
     logger.debug(df)
     logger.debug(len(df))
     
