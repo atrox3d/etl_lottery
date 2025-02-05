@@ -27,7 +27,7 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     ''' dynamically creates queries vases on kwargs '''
 
     conditions = []
-    params = []
+    params = {}
 
     kwargs = filter_dict_nulls(**kwargs)
     logger.info(f'{kwargs = }')
@@ -37,14 +37,18 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
 
     if kwargs:
         for name, value in kwargs.items():
+            print(f'{name = }')
             if name.endswith('__like'):
-                name = name.replace('__like', f' like {PARAM}')
-                conditions.append(name)
-                params.append(format_like(value, middle=True))
+                name = name.replace('__like', '')
+                condition = f'{name} like :{name}'
+                conditions.append(condition)
+                # params.append(format_like(value, middle=True))
+                params[name] = format_like(value, middle=True)
             else:
-                conditions.append(f'{name} = {PARAM}')
-                params.append(value)
-
+                conditions.append(f'{name} = :{name}')
+                # params.append(value)
+                params[name] = value
+        
         sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
         logger.debug(f'{sql = }')
         logger.debug(f'{conditions = }')

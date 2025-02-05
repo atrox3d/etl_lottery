@@ -5,7 +5,6 @@ BIND_PARAM = '?'
 
 
 def test_simple_select_no_params():
-    
     query = 'select * from table'
     sql, params = qb.query_builder(
         query,
@@ -13,11 +12,10 @@ def test_simple_select_no_params():
     print(f'{sql = }')
     print(f'{params = }')
     assert query == sql
-    assert params == []
+    assert params == {}
 
 
 def test_simple_select_one_param():
-    
     query = 'select * from table'
     sql, params = qb.query_builder(
         query,
@@ -25,8 +23,8 @@ def test_simple_select_one_param():
     )
     print(f'{sql = }')
     print(f'{params = }')
-    assert sql == f'{query} WHERE name = {BIND_PARAM}'
-    assert params == ['bob']
+    assert sql == f'{query} WHERE name = :name'
+    assert params == {'name': 'bob'}
 
 
 def test_simple_select_two_params():
@@ -38,8 +36,8 @@ def test_simple_select_two_params():
     )
     print(f'{sql = }')
     print(f'{params = }')
-    assert sql == f'{query} WHERE name = {BIND_PARAM} AND age = {BIND_PARAM}'
-    assert params == ['bob', 10]
+    assert sql == f'{query} WHERE name = :name AND age = :age'
+    assert params == {'name': 'bob', 'age': 10}
 
 
 def test_simple_select_with_one_param_like():
@@ -50,8 +48,8 @@ def test_simple_select_with_one_param_like():
     )
     print(f'{sql = }')
     print(f'{params = }')
-    assert sql == f'{query} WHERE name like {BIND_PARAM}'
-    assert params == ['%bob%']
+    assert sql == f'{query} WHERE name like :name'
+    assert params == {'name': '%bob%'}
 
 
 def test_simple_select_with_one_param_and_one_like():
@@ -63,7 +61,5 @@ def test_simple_select_with_one_param_and_one_like():
     )
     print(f'{sql = }')
     print(f'{params = }')
-    assert sql == f'{query} WHERE name like {BIND_PARAM} AND age = {BIND_PARAM}'
-    assert params == ['%bob%', 10]
-
-
+    assert sql == f'{query} WHERE name like :name AND age = :age'
+    assert params == {'name': '%bob%', 'age': 10}
