@@ -14,69 +14,46 @@ __DB: sqlite3.Connection = None
 
 
 def get_db(
-        **conn_args       # can accept config, or dbpath...
+        sqlitepath:str
 ) -> sqlite3.Connection:
     ''' returns new or existing connection'''
     global __DB
     
-    logger.debug(f'{conn_args = }')
-    dbpath = conn_args.get('dbpath')
-    logger.debug(f'{dbpath = }')
-    if not dbpath:
-        raise ValueError('dbpath is required')
-    logger.debug(f'{dbpath = }')
-    
+    logger.debug(f'{sqlitepath = }')
+
     if __DB is None:
-        __DB = sqlite3.connect(dbpath )
+        __DB = sqlite3.connect(sqlitepath)
+    
+    __DB.cursor().close()
     
     return __DB
 
 
-def get_engine(**conn_args) -> sqlalchemy.Engine:
-    logger.debug(f'{conn_args = }')
-    dbpath = conn_args.get('dbpath')
-        
-    logger.debug(f'{dbpath = }')
-    if not dbpath:
-        raise ValueError('dbpath is required')
-    logger.debug(f'{dbpath = }')
-
-    db_url = get_db_url(dbpath=dbpath)
-    engine = create_engine(db_url)
+def get_engine(sqlitepath:str) -> sqlalchemy.Engine:
+    logger.debug(f'{sqlitepath = }')
     
+    db_url = get_db_url(sqlitepath)
+    engine = create_engine(db_url)
     return engine
 
 
-def test_connection(**conn_args) -> bool:
+def test_connection() -> bool:
     ''' 
     tests the connection, returns True or False, logs error
     '''
     try:
-        logger.debug(f'{conn_args = }')
-        dbpath = conn_args.get('dbpath')
-        
-        logger.debug(f'{dbpath = }')
-        if not dbpath:
-            raise ValueError('dbpath is required')
-        logger.debug(f'{dbpath = }')
-        db = get_db(dbpath=dbpath)
+        __DB.cursor().close()
         return True
     except Exception as e:
-        logger.critical('connection failed')
         logger.critical(e)
+        logger.critical('connection failed')
         return False
 
 
-def get_db_url(**conn_args) -> str:
-    logger.debug(f'{conn_args = }')
-    dbpath = conn_args.get('dbpath')
-    
-    logger.debug(f'{dbpath = }')
-    if not dbpath:
-        raise ValueError('dbpath is required')
-    logger.debug(f'{dbpath = }')
+def get_db_url(sqlitepath:str) -> str:
+    logger.debug(f'{sqlitepath = }')
     logger.info('creating db URL')
-    url = f'sqlite:///{dbpath}'
+    url = f'sqlite:///{sqlitepath}'
     return url
 
 
