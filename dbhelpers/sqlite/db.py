@@ -33,7 +33,7 @@ def get_engine(sqlitepath:str) -> sqlalchemy.Engine:
     logger.debug(f'{sqlitepath = }')
     
     db_url = get_db_url(sqlitepath)
-    engine = create_engine(db_url)
+    engine = create_engine(db_url, paramstyle='qmark')
     return engine
 
 

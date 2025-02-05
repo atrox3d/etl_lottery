@@ -49,8 +49,9 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     kwargs = filter_dict_nulls(**kwargs)
     logger.info(f'{kwargs = }')
     
-    PARAM = '%s'
-    PARAM = '?'
+    # PARAM = '%s'    # mysql
+    PARAM = '?'     # sqlite/mysql
+    
     if kwargs:
         for condition, param in kwargs.items():
             if condition.endswith('__like'):
