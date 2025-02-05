@@ -49,21 +49,23 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     kwargs = filter_dict_nulls(**kwargs)
     logger.info(f'{kwargs = }')
     
+    PARAM = '%s'
+    PARAM = '?'
     if kwargs:
         for condition, param in kwargs.items():
             if condition.endswith('__like'):
-                condition = condition.replace('__like', ' like %s')
+                condition = condition.replace('__like', f' like {PARAM}')
                 conditions.append(condition)
                 params.append(format_like(param, middle=True))
             else:
-                conditions.append(f'{condition} = %s')
+                conditions.append(f'{condition} = {PARAM}')
                 params.append(param)
         
         sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
         logger.debug(f'{sql = }')
         logger.debug(f'{conditions = }')
         logger.debug(f'{params = }')
-        logger.info(sql % tuple(params))
+        # logger.info(sql % tuple(params)) #FIXME: interpolation
     else:
         logger.info(sql)
     return sql, params
