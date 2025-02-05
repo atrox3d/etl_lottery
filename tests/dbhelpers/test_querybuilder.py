@@ -3,6 +3,7 @@ from dbhelpers import querybuilder as qb
 
 BIND_PARAM = '?'
 
+
 def test_simple_select_no_params():
     
     query = 'select * from table'
@@ -29,7 +30,6 @@ def test_simple_select_one_param():
 
 
 def test_simple_select_two_params():
-    
     query = 'select * from table'
     sql, params = qb.query_builder(
         query,
@@ -43,7 +43,6 @@ def test_simple_select_two_params():
 
 
 def test_simple_select_with_one_param_like():
-    
     query = 'select * from table'
     sql, params = qb.query_builder(
         query,
@@ -56,7 +55,6 @@ def test_simple_select_with_one_param_like():
 
 
 def test_simple_select_with_one_param_and_one_like():
-    
     query = 'select * from table'
     sql, params = qb.query_builder(
         query,

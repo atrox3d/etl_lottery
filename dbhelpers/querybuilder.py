@@ -36,14 +36,14 @@ def query_builder(sql:str, operator='AND', **kwargs) -> str:
     PARAM = '?'     # sqlite/mysql
 
     if kwargs:
-        for condition, param in kwargs.items():
-            if condition.endswith('__like'):
-                condition = condition.replace('__like', f' like {PARAM}')
-                conditions.append(condition)
-                params.append(format_like(param, middle=True))
+        for name, value in kwargs.items():
+            if name.endswith('__like'):
+                name = name.replace('__like', f' like {PARAM}')
+                conditions.append(name)
+                params.append(format_like(value, middle=True))
             else:
-                conditions.append(f'{condition} = {PARAM}')
-                params.append(param)
+                conditions.append(f'{name} = {PARAM}')
+                params.append(value)
 
         sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
         logger.debug(f'{sql = }')
