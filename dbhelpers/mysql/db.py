@@ -33,7 +33,10 @@ def get_engine(**mysql_args) -> sqlalchemy.Engine:
     logger.debug(f'{mysql_args = }')
     
     db_url = get_db_url(**mysql_args)
-    engine = create_engine(db_url, paramstyle='qmark')
+    engine = create_engine(
+                db_url, 
+                # paramstyle='qmark'
+            )
     return engine
 
 
