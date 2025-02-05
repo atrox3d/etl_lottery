@@ -1,30 +1,22 @@
 # from mysql.connector import MySQLConnection
 import logging
+from typing import Callable
 import pandas as pd
 import streamlit as st
-from sqlalchemy import create_engine
+from sqlalchemy import Engine, create_engine
 
-from dbhelpers.mysql import config as _config
-from dbhelpers.mysql import db
+# from dbhelpers.mysql import config as _config
+# from dbhelpers.mysql import db
 
 logger = logging.getLogger(__name__)
 
-#
-#
-# TODO: move db init data elsewhere
-DB_NAME = 'testing'
-config = _config.build_config(database=DB_NAME)
-# db = get_db(config)
-# winners = get_winners(db)
-#
-#
-
 CACHE_TTL = None
 
-def get_connection_status() -> str:
+
+def get_connection_status(test_connection:Callable) -> str:
     ''' get connection status as string'''
     
-    if db.test_connection(config=config):
+    if test_connection():
         connection_status = 'OK'
     else:
         connection_status = 'ERRORE'
@@ -86,26 +78,21 @@ def filter_dict_df_keys(df:pd.DataFrame, **state) -> dict:
 
 
 @st.cache_data
-def get_empty_winners() -> pd.DataFrame:
-    # db_url = get_db_url(**config)
-    engine = db.get_engine(config=config)
-    empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', engine, index_col='index')
-    
+def get_empty_winners(_engine:Engine) -> pd.DataFrame:
+    empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', _engine, index_col='index')
     return empty_df
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_winners(
+            _engine:Engine,
             **fields
 ) -> pd.DataFrame:
     ''' get filtered df from mysql db '''
     
-    # db_url = get_db_url(**config)
-    engine = db.get_engine(config=config)
-
     logger.debug(f'{fields = }')
     params = filter_dict_df_keys(
-            get_empty_winners(),
+            get_empty_winners(_engine),
             **fields
     )
     logger.debug(f'{params = }')
@@ -123,7 +110,7 @@ def get_winners(
     logger.debug(f'{params = }')
     logger.debug(f'{sql = }')
     
-    df =  pd.read_sql(sql, engine, params=tuple(params), index_col='index')
+    df =  pd.read_sql(sql, _engine, params=tuple(params), index_col='index')
     logger.debug(df)
     logger.debug(len(df))
     

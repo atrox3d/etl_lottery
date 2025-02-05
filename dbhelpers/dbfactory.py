@@ -12,7 +12,7 @@ DbSources = StrEnum('DbSources', 'SQLITE MYSQL')
 
 def get_db(
         source       :DbSources, 
-        sqlitepath   :str, 
+        sqlitepath   :str = None, 
         **mysql_args
 ) -> Union[sqlite3.Connection, MySQLConnection]:
     if source == DbSources.SQLITE:
@@ -25,12 +25,25 @@ def get_db(
 
 def get_engine(
         source       :DbSources, 
-        sqlitepath   :str, 
+        sqlitepath   :str = None, 
         **mysql_args
 ) -> Union[sqlite3.Connection, MySQLConnection]:
     if source == DbSources.SQLITE:
         return sqlite.get_engine(sqlitepath)
     elif source == DbSources.MYSQL:
         return mysql.get_engine(**mysql_args)
+    else:
+        raise ValueError('source not recognized')
+
+
+def get_connection_tester(
+        source       :DbSources, 
+        # sqlitepath   :str = None, 
+        # **mysql_args
+) -> Union[sqlite3.Connection, MySQLConnection]:
+    if source == DbSources.SQLITE:
+        return sqlite.test_connection
+    elif source == DbSources.MYSQL:
+        return mysql.test_connection
     else:
         raise ValueError('source not recognized')
