@@ -4,22 +4,27 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy import create_engine
 
-from dbhelpers.mysql.config import build_config
-from dbhelpers.mysql.db import get_engine, test_connection, get_db_url
+from dbhelpers.mysql import config as _config
+from dbhelpers.mysql import db
 
 logger = logging.getLogger(__name__)
 
+#
+#
+# TODO: move db init data elsewhere
 DB_NAME = 'testing'
-CACHE_TTL = None
-config = build_config(database=DB_NAME)
+config = _config.build_config(database=DB_NAME)
 # db = get_db(config)
 # winners = get_winners(db)
+#
+#
 
+CACHE_TTL = None
 
 def get_connection_status() -> str:
     ''' get connection status as string'''
     
-    if test_connection(config=config):
+    if db.test_connection(config=config):
         connection_status = 'OK'
     else:
         connection_status = 'ERRORE'
@@ -83,7 +88,7 @@ def filter_dict_df_keys(df:pd.DataFrame, **state) -> dict:
 @st.cache_data
 def get_empty_winners() -> pd.DataFrame:
     # db_url = get_db_url(**config)
-    engine = get_engine(config=config)
+    engine = db.get_engine(config=config)
     empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', engine, index_col='index')
     
     return empty_df
@@ -96,7 +101,7 @@ def get_winners(
     ''' get filtered df from mysql db '''
     
     # db_url = get_db_url(**config)
-    engine = get_engine(config=config)
+    engine = db.get_engine(config=config)
 
     logger.debug(f'{fields = }')
     params = filter_dict_df_keys(

@@ -15,6 +15,14 @@ logging.basicConfig(
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
+#
+#
+# TODO: get engine HERE
+# TODO: get db HERE
+#
+#
+
+
 df  = dal.get_winners().copy()
 logger.info(f'{df = }')
 logger.info(f'{len(df) = }')
