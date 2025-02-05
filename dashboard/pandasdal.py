@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy import Engine
 
-from dashboard.query_builder import filter_dict_nulls, query_builder
+from dbhelpers.querybuilder import filter_dict_nulls, query_builder
 
 # from dbhelpers.mysql import config as _config
 # from dbhelpers.mysql import db
