@@ -32,13 +32,13 @@ SQLITEPATH='testing.db'
 #
 # TODO: get engine HERE
 # TODO: get db HERE
-# db = dbfactory.get_db(dbfactory.DbSources.MYSQL, **config)
-# engine = dbfactory.get_engine(dbfactory.DbSources.MYSQL, **config)
-# connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.MYSQL)
+db = dbfactory.get_db(dbfactory.DbSources.MYSQL, **config)
+engine = dbfactory.get_engine(dbfactory.DbSources.MYSQL, **config)
+connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.MYSQL)
 #
-db = dbfactory.get_db(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
-engine = dbfactory.get_engine(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
-connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.SQLITE)
+# db = dbfactory.get_db(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
+# engine = dbfactory.get_engine(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
+# connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.SQLITE)
 #
 #
 
