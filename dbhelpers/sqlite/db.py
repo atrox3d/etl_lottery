@@ -55,7 +55,7 @@ def test_connection() -> bool:
 
 def get_db_url(sqlitepath:str) -> str:
     logger.debug(f'{sqlitepath = }')
-    logger.info('creating db URL')
+    logger.debug('creating db URL')
     url = f'sqlite:///{sqlitepath}'
     return url
 

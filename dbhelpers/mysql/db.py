@@ -61,7 +61,7 @@ def get_db_url(
         driver:str="mysql+mysqlconnector"
 ) -> URL:
 
-    logger.info('creating db URL')
+    logger.debug('creating db URL')
     url_object = URL.create(
         driver,
         username=user,

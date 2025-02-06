@@ -30,10 +30,10 @@ def query_builder(sql:str, operator='AND', **kwargs) -> tuple[str, dict]:
     params = {}
 
     kwargs = filter_dict_nulls(**kwargs)
-    logger.info(f'{kwargs = }')
+    logger.debug(f'{kwargs = }')
 
     # PARAM = '%s'    # mysql
-    PARAM = '?'     # sqlite/mysql
+    # PARAM = '?'     # sqlite/mysql
 
     if kwargs:
         for name, value in kwargs.items():
@@ -55,5 +55,5 @@ def query_builder(sql:str, operator='AND', **kwargs) -> tuple[str, dict]:
         logger.debug(f'{params = }')
         # logger.info(sql % tuple(params)) #FIXME: interpolation
     else:
-        logger.info(sql)
+        logger.debug(f'{sql = }')
     return sql, params

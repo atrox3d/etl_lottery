@@ -16,7 +16,8 @@ def paginated_df(
         hide_index:bool=True
 ):
 
-    logger.info(f'{df = }')
+    for x in df.head().to_string().split('\n'):
+        logger.info(x)
     logger.info(f'{len(df) = }')
 
     df = df.reset_index(drop=True)
@@ -87,7 +88,7 @@ def paginated_df(
 
         splitdf = data.split_df(df, batch_size)
         paginated.dataframe(
-            data=splitdf[current_page-1], 
+            data=splitdf[current_page-1],   #FIXME: IndexError: list index out of range
             use_container_width=True,
             hide_index=hide_index,
         )
