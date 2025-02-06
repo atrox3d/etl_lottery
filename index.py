@@ -24,7 +24,10 @@ logging.basicConfig(
 
 # db variables and options
 DB_NAME = 'testing'
-mysqlconfig = config.build_config(database=DB_NAME)
+mysqlconfig = config.build_config(
+    database=DB_NAME,
+    password='fake'
+)
 SQLITEPATH='testing.db'
 DBSOURCE = dbfactory.DbSources.SQLITE
 (
