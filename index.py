@@ -54,7 +54,7 @@ st.write(f'''
     Dashboard per analisi vincite Lotteria Italia 2024 - 2025
     
     stato della connessione: {dal.get_connection_status(connection_tester)} 
-    -- (db: {DBSOURCE}) - ({DBDETAILS})
+    -- (db: {DBSOURCE})
 ''')
 
 
