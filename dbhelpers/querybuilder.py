@@ -1,5 +1,5 @@
 import logging
-
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +48,16 @@ def query_builder(sql:str, operator='AND', **kwargs) -> tuple[str, dict]:
                 conditions.append(f'{name} = :{name}')
                 # params.append(value)
                 params[name] = value
+        version = sys.version_info[:2]
+        print(f'version = ')
+        logger.info(f'version = ')
+        if  version < (3, 12):
+            logger.warning(f'python version {version} lesser than 3.12')
+            conditions_list = f' {operator} ' .join(conditions)
+            sql = f'{sql} WHERE {conditions_list}'
+        else:
+            sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
         
-        sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
         logger.debug(f'{sql = }')
         logger.debug(f'{conditions = }')
         logger.debug(f'{params = }')
