@@ -1,36 +1,69 @@
+from ast import Not
 import logging
 import streamlit as st
 
 from dashboard import pandasdal as dal
 from dashboard import helpers
 from dashboard import header
+from dbhelpers.dbfactory import setup_db
 from pagination import interface
 
+from dbhelpers.mysql import config
+from dbhelpers import dbfactory
 
-#   setup logging, dataframe, gui fixes
+
+# setup logging, dataframe, gui fixes #
+
+
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
-df  = dal.get_winners().copy()
-logger.info(f'{df = }')
+# db variables and options
+DB_NAME = 'testing'
+mysqlconfig = config.build_config(
+    database=DB_NAME,
+    password='fake'
+)
+SQLITEPATH='testing.db'
+DBSOURCE = dbfactory.DbSources.SQLITE
+(
+    db, 
+    engine, 
+    connection_tester, 
+    DBDETAILS
+) = setup_db(DBSOURCE, mysqlconfig, SQLITEPATH)
+
+# setup data
+df  = dal.get_winners(engine).copy()
+for x in df.head().to_string().split('\n'):
+    logger.info(x)
 logger.info(f'{len(df) = }')
 
-
+# strange fix
+# https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
 helpers.fix_widgets_reload()
+
+
+# interface #
+
 
 #   title
 st.title('Analisi lotteria italia')
 st.write(f'''
     Dashboard per analisi vincite Lotteria Italia 2024 - 2025
     
-    stato della connessione: {dal.get_connection_status()}
+    stato della connessione: {dal.get_connection_status(connection_tester)} 
+    -- (db: {DBSOURCE})
 ''')
 
+
+# sidebar
 with st.sidebar:
+    st.header('Debug')
     show_count, show_state = header.display_options()
 
     #   sidebar header filtri
@@ -49,18 +82,21 @@ with st.sidebar:
     #   sidebar subheader premio
     st.subheader('Premio')
     categoria, premio = header.prize_filters(df, link)
-    
-#   TABLE
-winners = dal.get_winners(**dal.filter_dict_df_keys(df, **st.session_state))
+
+
+#   paginated table
+winners = dal.get_winners(engine, **dal.filter_dict_df_keys(df, **st.session_state))
 # st.dataframe( winners, hide_index=True )
-logger.info(f'{winners = }')
+logger.debug(f'{winners = }')
 logger.info(f'{len(winners) = }')
 interface.paginated_df(winners)
+
+
 #   info
 if show_count:
-    st.write(len(winners))
+    st.write(f'Totale records: {len(winners)}')
 
 if show_state:
     st.session_state
 
-helpers.console_space()
+helpers.logger_console_space()

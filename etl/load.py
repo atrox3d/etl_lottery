@@ -9,18 +9,59 @@ from sqlalchemy import URL
 
 logger = logging.getLogger(__name__)
 
-def load_to_mysql(df:pd.DataFrame, url_object:URL):
+
+def load_to_mysql(
+        df          :pd.DataFrame, 
+        url_object  :URL,
+        replace     :bool = True,
+        index       :bool = True
+):
 
     logger.info('creating engine')
     logger.info(f'driver    : {url_object.drivername}')
     logger.info(f'host      : {url_object.host}')
     logger.info(f'user      : {url_object.username}')
     logger.info(f'password  : {url_object.password}')
-    logger.info(f'databse   : {url_object.database}')
+    logger.info(f'database  : {url_object.database}')
+    
+    replace = 'replace' if replace else 'fail'
+    logger.info(f'replace   : {replace}')
+    logger.info(f'index     : {index}')
+    
     engine = create_engine(url_object)
     
     logger.info('loading to mysql')
-    df.to_sql(name='lotteria', con=engine, if_exists='replace', index=True)
+    df.to_sql(
+        name='lotteria', 
+        con=engine, 
+        if_exists=replace, 
+        index=index
+    )
+
+
+def load_to_sqlite(
+        df          :pd.DataFrame, 
+        url         :str,
+        replace     :bool = True,
+        index       :bool = True
+):
+
+    logger.info('creating engine')
+    logger.info(f'database  : {url}')
+    
+    replace = 'replace' if replace else 'fail'
+    logger.info(f'replace   : {replace}')
+    logger.info(f'index     : {index}')
+    
+    engine = create_engine(url)
+    
+    logger.info('loading to sqlite')
+    df.to_sql(
+        name='lotteria', 
+        con=engine, 
+        if_exists=replace, 
+        index=index
+    )
     
 # conn = engine.connect()
 # print(conn.closed)

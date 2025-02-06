@@ -1,5 +1,5 @@
 import logging
-from dbhelpers.db import get_db
+from dbhelpers.mysql.db import get_db
 from mysql.connector import MySQLConnection
 
 logger = logging.getLogger(__name__)

@@ -9,7 +9,7 @@ SECRETS_PATH = '.secrets'
 logger = logging.getLogger(__name__)
 
 
-def get_password(
+def get_password_from_secrets(
         password_filename:str='password.txt',
         secrets_path:str=SECRETS_PATH
 ) -> str:
@@ -20,13 +20,13 @@ def get_password(
 def build_config(
         host:str='localhost',
         user:str='root',
-        password:str=get_password(),
+        password:str=None,
         database:str|None=None
 ) -> dict:
     return dict(
         host=host,
         user=user,
-        password=password,
+        password=password or get_password_from_secrets(),
         database=database
     )
 

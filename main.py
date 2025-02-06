@@ -1,33 +1,39 @@
+import typer
 import logging
 
-from dbhelpers.db import get_db_url
-from etl.extract import get_df_from_html
-from etl.load import load_to_mysql
-from dbhelpers.config import build_config
+from commands import etl
 
 logger = logging.getLogger(__name__)
+
+app = typer.Typer(
+    add_completion  = False,   # disable completion hint
+    no_args_is_help = False   # need to always execute main callback
+)
+
+app.add_typer(etl.app, name='etl')
 
 INPUT_PATH = 'data/in/lotteria.html'
 DB_NAME = 'testing'
 
-if __name__ == "__main__":
+
+@app.callback(invoke_without_command=True)
+def default_callback(
+    ctx       :typer.Context, 
+):
     logging.basicConfig(
         level=logging.INFO
     )
-    logger.info('start etl process')
+    logger.debug(f'main callback STARTED {ctx.invoked_subcommand = }')
     
-    logger.info(f'loading data')
-    winners = get_df_from_html(INPUT_PATH)
-    check_nan = winners.isna().values.any()
-    assert check_nan == False
-    
-    logger.info('loading config')
-    config = build_config(database=DB_NAME)
-    
-    logger.info('creating db URL')
-    db_url = get_db_url(**config)
-    
-    logger.info('loading data to mysql db')
-    load_to_mysql(winners, db_url)
-    
-    logger.info('end etl process')
+    # call help if no args, no_args_is_help must be False
+    logger.debug(f'{ctx.args = }')
+    if not ctx.args:
+        ctx.get_help()
+
+
+# @app.command()
+# def main():
+#     pass
+
+if __name__ == "__main__":
+    app()
