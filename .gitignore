@@ -1,0 +1,10 @@
+__pycache__/
+venv/
+*.egg-info/
+build/
+*.log
+.venv/
+/.*
+.*
+!/.gitignore
+!/.gitattributes
