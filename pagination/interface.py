@@ -26,15 +26,15 @@ def paginated_df(
         upleft_menu, upcenter_menu, upright_menu = st.columns(3)
 
         with upleft_menu:
-            sort_yn = st.radio('Sort Data', options=['Yes', 'No'], horizontal=True, index=1)
+            sort_yn = st.toggle('Ordinamento dati', value=sort_menu)
             
-            if sort_yn == 'Yes':
+            if sort_yn:
                 
                 with upcenter_menu:
-                    sort_field = st.selectbox('Sort by', options=df.columns)
+                    sort_field = st.selectbox('Ordina per', options=df.columns)
                 
                 with upright_menu:
-                    sort_dir = st.radio('Direction', options=['⬆️', '⬇️'], horizontal=True)
+                    sort_dir = st.radio('Direzione', options=['⬆️', '⬇️'], horizontal=True)
                 
                 df = df.sort_values(
                     by=sort_field, 
