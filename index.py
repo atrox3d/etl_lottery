@@ -5,6 +5,7 @@ import streamlit as st
 from dashboard import pandasdal as dal
 from dashboard import helpers
 from dashboard import header
+from dbhelpers.dbfactory import setup_db
 from pagination import interface
 
 from dbhelpers.mysql import config
@@ -19,47 +20,43 @@ logging.basicConfig(
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
+# general variables and options
 DB_NAME = 'testing'
 config = config.build_config(database=DB_NAME)
 SQLITEPATH='testing.db'
 DBSOURCE = dbfactory.DbSources.MYSQL
-#
-# setup db
-# TODO: move this to dbfactory
-#
-if DBSOURCE == dbfactory.DbSources.MYSQL:
-    db = dbfactory.get_db(dbfactory.DbSources.MYSQL, **config)
-    engine = dbfactory.get_engine(dbfactory.DbSources.MYSQL, **config)
-    connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.MYSQL)
-elif DBSOURCE == dbfactory.DbSources.SQLITE:
-    db = dbfactory.get_db(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
-    engine = dbfactory.get_engine(dbfactory.DbSources.SQLITE, sqlitepath=SQLITEPATH)
-    connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.SQLITE)
-else:
-    raise NotImplementedError(f'{DBSOURCE = }')
-#
-#
-#
+(
+    db, 
+    engine, 
+    connection_tester, 
+    DBDETAILS
+) = setup_db(DBSOURCE, config, SQLITEPATH)
 
 # setup data
 df  = dal.get_winners(engine).copy()
-# logger.info(f'{df.head() = }')
-# logger.info(df.head().to_string())
 for x in df.head().to_string().split('\n'):
     logger.info(x)
 logger.info(f'{len(df) = }')
 
+# strange fix
 # https://docs.streamlit.io/develop/concepts/architecture/widget-behavior
 helpers.fix_widgets_reload()
+
+
+# interface #
+
 
 #   title
 st.title('Analisi lotteria italia')
 st.write(f'''
     Dashboard per analisi vincite Lotteria Italia 2024 - 2025
     
-    stato della connessione: {dal.get_connection_status(connection_tester)} -- (db: {DBSOURCE})
+    stato della connessione: {dal.get_connection_status(connection_tester)} 
+    -- (db: {DBSOURCE}) - ({DBDETAILS})
 ''')
 
+
+# sidebar
 with st.sidebar:
     show_count, show_state = header.display_options()
 
@@ -79,13 +76,16 @@ with st.sidebar:
     #   sidebar subheader premio
     st.subheader('Premio')
     categoria, premio = header.prize_filters(df, link)
-    
-#   TABLE
+
+
+#   paginated table
 winners = dal.get_winners(engine, **dal.filter_dict_df_keys(df, **st.session_state))
 # st.dataframe( winners, hide_index=True )
 logger.debug(f'{winners = }')
 logger.info(f'{len(winners) = }')
 interface.paginated_df(winners)
+
+
 #   info
 if show_count:
     st.write(len(winners))
