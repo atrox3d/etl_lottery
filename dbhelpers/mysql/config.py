@@ -20,13 +20,13 @@ def get_password_from_secrets(
 def build_config(
         host:str='localhost',
         user:str='root',
-        password:str=get_password_from_secrets(),
+        password:str=None,
         database:str|None=None
 ) -> dict:
     return dict(
         host=host,
         user=user,
-        password=password,
+        password=password or get_password_from_secrets(),
         database=database
     )
 
