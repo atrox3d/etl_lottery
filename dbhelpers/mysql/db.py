@@ -5,7 +5,6 @@ import mysql.connector
 from mysql.connector import MySQLConnection
 from sqlalchemy import URL
 import sqlalchemy
-from .config import get_default_config
 
 
 logger = logging.getLogger(__name__)
