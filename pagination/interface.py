@@ -55,6 +55,14 @@ def paginated_df(
         with dncenter_menu:
             int_pages = int(len(df) / batch_size)
             total_pages = (int_pages if int_pages > 0 else 1)
+            
+            # fix "current page index overflow" when filtering df and current page of the view 
+            # is already greater than the length of the filtered df
+            if st.session_state.get('page') is None:
+                st.session_state.page = 1
+            if st.session_state.page > total_pages:
+                st.session_state.page = total_pages
+            
             current_page = st.number_input(
                 'Page', min_value=1, max_value=total_pages, step=1,
                 key='page'
@@ -87,8 +95,16 @@ def paginated_df(
                 )
 
         splitdf = data.split_df(df, batch_size)
+        logger.info('-'*50)
+        WIDTH = 20
+        logger.debug(f'{len(splitdf) = :>{WIDTH}}')
+        logger.debug(f'{int_pages = :>{WIDTH}}')
+        logger.debug(f'{total_pages = :>{WIDTH}}')
+        logger.debug(f'{st.session_state.page = :>{WIDTH}}')
+        logger.debug(f'{current_page = :>{WIDTH}}')
+        logger.debug('-'*50)
         paginated.dataframe(
-            data=splitdf[current_page-1],   #FIXME: IndexError: list index out of range
+            data=splitdf[st.session_state.page-1],   #FIXME: IndexError: list index out of range
             use_container_width=True,
             hide_index=hide_index,
         )
