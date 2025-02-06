@@ -50,7 +50,7 @@ def paginated_df(
         dnleft_menu, dncenter_menu, dnright_menu = st.columns((4, 1, 1))
         
         with dnright_menu:
-            batch_size = st.selectbox('Page Size', options=[10, 25, 50, 100])
+            batch_size = st.selectbox('Righe per pag.', options=[10, 25, 50, 100])
         
         with dncenter_menu:
             int_pages = int(len(df) / batch_size)
@@ -64,12 +64,12 @@ def paginated_df(
                 st.session_state.page = total_pages
             
             current_page = st.number_input(
-                'Page', min_value=1, max_value=total_pages, step=1,
+                'Pag.', min_value=1, max_value=total_pages, step=1,
                 key='page'
                 )
                 
         with dnleft_menu:
-            st.markdown(f'Page **{current_page}** of **{total_pages}** - (total: {len(df)} rows)')
+            st.markdown(f'Pag. **{current_page}** di **{total_pages}** - (totale: {len(df)} records)')
             
             left, right = st.columns(2)
             
@@ -83,13 +83,13 @@ def paginated_df(
             
             with left:
                 st.button(
-                    'left', 
+                    '⬅️', 
                     on_click=previous_page,
                     disabled=current_page==1
                 )
             with right:
                 st.button(
-                    'right', 
+                    '➡️', 
                     on_click=next_page,
                     disabled=current_page==total_pages
                 )
