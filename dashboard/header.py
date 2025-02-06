@@ -5,13 +5,13 @@ from dashboard import helpers, fixselect, pandasdal as dal
 
 def display_options() -> tuple[bool, bool]:
     
-    show_count = st.checkbox(
-        label='show count',
+    show_count = st.toggle(
+        label='Conteggio record',
         value=True,
         # key='link'
     )
-    show_state = st.checkbox(
-        label='show state',
+    show_state = st.toggle(
+        label='mostra stato',
         value=True,
         # key='link'
     )
@@ -21,7 +21,7 @@ def display_options() -> tuple[bool, bool]:
 
 def filter_options() -> bool:
     
-    link = st.checkbox( label='filtri collegati', value=True, )
+    link = st.toggle( label='filtri collegati', value=True, )
     
     st.button('reset filtri',
         on_click=helpers.reset_widgets

@@ -60,6 +60,7 @@ st.write(f'''
 
 # sidebar
 with st.sidebar:
+    st.header('Debug')
     show_count, show_state = header.display_options()
 
     #   sidebar header filtri

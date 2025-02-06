@@ -103,10 +103,17 @@ def paginated_df(
         logger.debug(f'{st.session_state.page = :>{WIDTH}}')
         logger.debug(f'{current_page = :>{WIDTH}}')
         logger.debug('-'*50)
-        paginated.dataframe(
-            data=splitdf[st.session_state.page-1],   #FIXME: IndexError: list index out of range
-            use_container_width=True,
-            hide_index=hide_index,
-        )
+        if len(splitdf):
+            paginated.dataframe(
+                data=splitdf[st.session_state.page-1],   #FIXME: IndexError: list index out of range
+                use_container_width=True,
+                hide_index=hide_index,
+            )
+        else:
+            paginated.dataframe(
+                data=df.head(0),
+                use_container_width=True,
+                hide_index=hide_index,
+            )
 
 
