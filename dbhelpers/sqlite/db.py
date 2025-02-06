@@ -22,7 +22,7 @@ def get_db(
     logger.debug(f'{sqlitepath = }')
 
     if __DB is None:
-        __DB = sqlite3.connect(sqlitepath)
+        __DB = sqlite3.connect(sqlitepath, check_same_thread=False)
     
     __DB.cursor().close()
     
