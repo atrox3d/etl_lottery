@@ -4,28 +4,36 @@ from dashboard import helpers, fixselect, pandasdal as dal
 
 
 def display_options() -> tuple[bool, bool]:
+
+    left, right = st.columns(2)
     
-    show_count = st.toggle(
-        label='Conteggio record',
-        value=True,
-        # key='link'
-    )
-    show_state = st.toggle(
-        label='mostra stato',
-        value=True,
-        # key='link'
-    )
+    with left:
+        show_count = st.toggle(
+            label='Conteggio record',
+            value=False,
+            # key='link'
+        )
+    with right:
+        show_state = st.toggle(
+            label='mostra stato',
+            value=False,
+            # key='link'
+        )
     
     return show_count, show_state
 
 
 def filter_options() -> bool:
     
-    link = st.toggle( label='filtri collegati', value=True, )
+    left, right = st.columns(2)
     
-    st.button('reset filtri',
-        on_click=helpers.reset_widgets
-    )
+    with left:
+        link = st.toggle( label='filtri collegati', value=True, )
+    
+    with right:
+        st.button('reset filtri',
+            on_click=helpers.reset_widgets
+        )
     
     return link
 

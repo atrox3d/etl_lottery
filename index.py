@@ -91,7 +91,7 @@ interface.paginated_df(winners)
 
 #   info
 if show_count:
-    st.write(len(winners))
+    st.write(f'Totale records: {len(winners)}')
 
 if show_state:
     st.session_state
