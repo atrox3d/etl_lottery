@@ -53,17 +53,24 @@ def get_connection_tester(
 # setup db
 # TODO: move this to dbfactory
 #
-def setup_db(dbsource, config, sqlitepath):
+def setup_db(
+    dbsource    : DbSources,
+    config      : dict,
+    sqlitepath  : str
+) -> tuple[Union[sqlite3.Connection, MySQLConnection], Engine, callable, str]:
+    
     if dbsource == dbfactory.DbSources.MYSQL:
         db = dbfactory.get_db(dbfactory.DbSources.MYSQL, **config)
         engine = dbfactory.get_engine(dbfactory.DbSources.MYSQL, **config)
         connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.MYSQL)
         dbdetails = f'{config["user"]}@{config["host"]}/{config["database"]}'
+    
     elif dbsource == dbfactory.DbSources.SQLITE:
         db = dbfactory.get_db(dbfactory.DbSources.SQLITE, sqlitepath=sqlitepath)
         engine = dbfactory.get_engine(dbfactory.DbSources.SQLITE, sqlitepath=sqlitepath)
         connection_tester = dbfactory.get_connection_tester(dbfactory.DbSources.SQLITE)
         dbdetails = f'{sqlitepath}'
+    
     else:
         raise NotImplementedError(f'{dbsource = }')
     return db, engine, connection_tester, dbdetails

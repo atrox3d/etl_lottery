@@ -12,7 +12,9 @@ from dbhelpers.mysql import config
 from dbhelpers import dbfactory
 
 
-#   setup logging, dataframe, gui fixes
+# setup logging, dataframe, gui fixes #
+
+
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
@@ -20,17 +22,17 @@ logging.basicConfig(
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
-# general variables and options
+# db variables and options
 DB_NAME = 'testing'
-config = config.build_config(database=DB_NAME)
+mysqlconfig = config.build_config(database=DB_NAME)
 SQLITEPATH='testing.db'
-DBSOURCE = dbfactory.DbSources.MYSQL
+DBSOURCE = dbfactory.DbSources.SQLITE
 (
     db, 
     engine, 
     connection_tester, 
     DBDETAILS
-) = setup_db(DBSOURCE, config, SQLITEPATH)
+) = setup_db(DBSOURCE, mysqlconfig, SQLITEPATH)
 
 # setup data
 df  = dal.get_winners(engine).copy()
