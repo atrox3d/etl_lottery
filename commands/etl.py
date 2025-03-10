@@ -4,6 +4,7 @@ import typer
 from dbhelpers.mysql.db import get_db_url
 from etl.extract import get_df_from_html
 from etl.load import load_to_mysql, load_to_sqlite
+from etl.load import DatabaseError
 from dbhelpers.mysql.config import build_config
 
 logger = logging.getLogger(__name__)
@@ -29,10 +30,14 @@ def html2mysql(replace: bool = True, index: bool = True):
     logger.info('creating db URL')
     db_url = get_db_url(**config)
     
-    logger.info('loading data to mysql db')
-    load_to_mysql(winners, db_url)
-    
-    logger.info('end etl process')
+    try:
+        logger.info('loading data to mysql db')
+        load_to_mysql(winners, db_url)
+        logger.info('end etl process')
+    except DatabaseError as e:
+        logger.error(e)
+        logger.fatal('problems with mysql db, exiting')
+        exit(1)
 
 
 @app.command()

@@ -4,6 +4,7 @@ import pandas as pd
 # https://docs.sqlalchemy.org/en/20/core/engines.html
 from sqlalchemy import create_engine
 from sqlalchemy import URL
+from sqlalchemy.exc import DatabaseError
 # 
 # engine = create_engine("postgresql+psycopg2://scott:tiger@localhost:5432/mydatabase")
 

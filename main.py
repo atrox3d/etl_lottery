@@ -21,8 +21,10 @@ def default_callback(
     ctx       :typer.Context, 
 ):
     logging.basicConfig(
-        level=logging.INFO
+        level=logging.INFO,
+        format='%(levelname)5s : %(name)20s : %(message)s'
     )
+    # logger.info(f'Current logger format: {logging.getLogger().handlers[0].formatter._fmt if logging.getLogger().handlers else "No formatter set"}')
     logger.debug(f'main callback STARTED {ctx.invoked_subcommand = }')
     
     # call help if no args, no_args_is_help must be False
