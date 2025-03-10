@@ -11,24 +11,26 @@ from dbhelpers.mysql import config
 from dbhelpers import dbfactory
 
 
-# setup logging, dataframe, gui fixes #
-
-
+#################################################################################
+# setup logging, db, dataframe, gui fixes #
+#################################################################################
 logger = logging.getLogger(__name__)
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(levelname)s | %(funcName)s | %(message)s'
 )
 
-# db variables and options
+# mysql variables and options
 DB_NAME = 'testing'
-mysqlconfig = config.build_config(
+mysqlconfig = config.get_default_config(
     database=DB_NAME,
-    password='fake'
 )
+
+# sqlite variables and options
 SQLITEPATH='testing.db'
 DBSOURCE = dbfactory.DbSources.SQLITE
+
+# call factory to get whatever db is chosen
 (
     db, 
     engine, 
@@ -38,6 +40,7 @@ DBSOURCE = dbfactory.DbSources.SQLITE
 
 # setup data
 df  = dal.get_winners(engine).copy()
+# just log sample data
 for x in df.head().to_string().split('\n'):
     logger.info(x)
 logger.info(f'{len(df) = }')
@@ -47,8 +50,9 @@ logger.info(f'{len(df) = }')
 helpers.fix_widgets_reload()
 
 
+#################################################################################
 # interface #
-
+#################################################################################
 
 #   title
 st.title('Analisi lotteria italia')
