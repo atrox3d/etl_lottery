@@ -49,6 +49,12 @@ Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
 
 Per eseguire i test unitari, usa il comando `pytest` nella directory principale del progetto.
 
+
+
+
+
+#TODO: update english translastion
+
 ### English
 
 This project contains code for analyzing data from the Italian Lottery (Lotteria Italia).
