@@ -51,12 +51,13 @@ def query_builder(sql:str, operator='AND', **kwargs) -> tuple[str, dict]:
         version = sys.version_info[:2]
         print(f'version = ')
         logger.info(f'version = ')
-        if  version < (3, 12):
-            logger.warning(f'python version {version} lesser than 3.12')
-            conditions_list = f' {operator} ' .join(conditions)
-            sql = f'{sql} WHERE {conditions_list}'
-        else:
-            sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
+        # if  version < (3, 12):
+            # logger.warning(f'python version {version} lesser than 3.12')
+        # try:
+            # sql = f'{sql} WHERE { f' {operator} ' .join(conditions)}'
+        # except :
+        conditions_list = f' {operator} ' .join(conditions)
+        sql = f'{sql} WHERE {conditions_list}'
         
         logger.debug(f'{sql = }')
         logger.debug(f'{conditions = }')
