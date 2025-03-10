@@ -1,16 +1,36 @@
 import logging
 import pandas as pd
 
-# https://docs.sqlalchemy.org/en/20/core/engines.html
-from sqlalchemy import create_engine
-from sqlalchemy import URL
+from sqlalchemy import create_engine, text
+from sqlalchemy import URL, exc
 from sqlalchemy.exc import DatabaseError
+
 # 
 # engine = create_engine("postgresql+psycopg2://scott:tiger@localhost:5432/mydatabase")
 
 logger = logging.getLogger(__name__)
 
 
+def create_mysql_db(
+        url_object  :URL,
+        db_name     :str
+):
+
+    logger.info('creating engine')
+    engine = create_engine(url_object)
+    
+    try:
+        with engine.begin() as conn:
+            conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {db_name}"))
+            logger.info("Database 'testing' created successfully")
+    except exc.OperationalError as e:
+        logger.error(f"Failed to create database: {e}")
+        raise
+    except exc.SQLAlchemyError as e:
+        logger.error(f"Failed to create database: {e}")
+        raise
+    
+    
 def load_to_mysql(
         df          :pd.DataFrame, 
         url_object  :URL,
