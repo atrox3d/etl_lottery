@@ -14,19 +14,36 @@ Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
     *   `pagination/`: Gestisce la paginazione dei dati.
 
 *   `main.py`: crea la tabella 'lotteria' nel database 'testing'
+    *   `etl/`: Contiene script per l'estrazione, trasformazione e caricamento dei dati (ETL).
+
+        python main.py
+
 
 *   `dbhelpers/`: Contiene moduli per la gestione del database, inclusa la configurazione e la creazione di query.
 *   `tests/`: Contiene test unitari per i moduli `dbhelpers`.
-*   `etl/`: Contiene script per l'estrazione, trasformazione e caricamento dei dati (ETL).
-*   `.devcontainer/`: Configurazione per l'ambiente di sviluppo in Docker.
-*   `docker-compose.yml`: File di configurazione per Docker Compose.
+*   `docker-compose.yml`: crea due servizi:
+    *   mysql
+    *   phpmydamin
 
 **Come eseguire il progetto:**
 
 1.  Assicurati di avere Docker e Docker Compose installati.
 2.  Clona il repository.
-3.  Esegui `docker compose up --build` nella directory principale del progetto.
-4.  L'applicazione sarà disponibile all'indirizzo `http://localhost:8501`.
+
+3.  Creare ed attivare virtual environment:
+
+        python -m venv .venv
+        source .venv/bin/activate
+
+
+4.  Installare le dipendenze:
+
+        pip install -r requirements.txt
+5.  Esegui `docker compose up` nella directory principale del progetto.
+6.  Esegui `python main.py`per creare la tabella 'lotteria' nel database 'testing'.
+7.  Esegui `streamlit run index.py` per avviare l'applicazione Streamlit.
+8.  L'applicazione sarà disponibile all'indirizzo `http://localhost:8501`.
+
 
 **Test:**
 
