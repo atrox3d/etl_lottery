@@ -6,6 +6,10 @@
 
 Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
 
+una versione online che utilizza sqlite come db è raggiungibile a:
+https://atrox3dlottery.streamlit.app/
+
+
 **Struttura del progetto:**
 
 *   `index.py`: Script principale per l'esecuzione dell'applicazione Streamlit.
@@ -60,6 +64,9 @@ Per eseguire i test unitari, usa il comando `pytest` nella directory principale 
 ---
 
 This project contains code for analyzing data from the Italian Lottery (Lotteria Italia).
+
+an online version which uses sqlite as db is reachable at:
+https://atrox3dlottery.streamlit.app/
 
 **Project Structure:**
 
