@@ -1,13 +1,19 @@
 ## README
 
 ### Italiano
----
 
+---
 
 Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
 
 una versione online che utilizza sqlite come db è raggiungibile a:
 https://atrox3dlottery.streamlit.app/
+
+questa versione è generata dal branch streamlitcloud/portfolio:
+https://github.com/atrox3d/etl_lottery/tree/streamlitcloud/portfolio
+
+oppure dal tag atrox3dlottery.streamlit.app:
+https://github.com/atrox3d/etl_lottery/tree/atrox3dlottery.streamlit.app
 
 
 **Struttura del progetto:**
@@ -67,6 +73,13 @@ This project contains code for analyzing data from the Italian Lottery (Lotteria
 
 an online version which uses sqlite as db is reachable at:
 https://atrox3dlottery.streamlit.app/
+
+this version is generated from branch streamlitcloud/portfolio:
+https://github.com/atrox3d/etl_lottery/tree/streamlitcloud/portfolio
+
+or from tag atrox3dlottery.streamlit.app:
+https://github.com/atrox3d/etl_lottery/tree/atrox3dlottery.streamlit.app
+
 
 **Project Structure:**
 
