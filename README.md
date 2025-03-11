@@ -1,6 +1,8 @@
 ## README
 
 ### Italiano
+---
+
 
 Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
 
@@ -13,10 +15,11 @@ Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
     *   `dashboard/`: Contiene moduli per la creazione della dashboard, inclusi helper e gestione dei dati con pandas.
     *   `pagination/`: Gestisce la paginazione dei dati.
 
-*   `main.py`: crea la tabella 'lotteria' nel database 'testing'
-    *   `etl/`: Contiene script per l'estrazione, trasformazione e caricamento dei dati (ETL).
+*   `main.py`: carica e trasforma i dati da tabella html alla tabella 'lotteria' nel database 'testing'
 
         python main.py
+        
+    *   `etl/`: Contiene script per l'estrazione, trasformazione e caricamento dei dati (ETL).
 
 
 *   `dbhelpers/`: Contiene moduli per la gestione del database, inclusa la configurazione e la creazione di query.
@@ -25,16 +28,16 @@ Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
     *   mysql
     *   phpmydamin
 
+---
+
 **Come eseguire il progetto:**
 
 1.  Assicurati di avere Docker e Docker Compose installati.
 2.  Clona il repository.
-
 3.  Creare ed attivare virtual environment:
 
         python -m venv .venv
         source .venv/bin/activate
-
 
 4.  Installare le dipendenze:
 
@@ -44,18 +47,17 @@ Questo progetto contiene codice per l'analisi dei dati della Lotteria Italia.
 7.  Esegui `streamlit run index.py` per avviare l'applicazione Streamlit.
 8.  L'applicazione sarà disponibile all'indirizzo `http://localhost:8501`.
 
+---
 
 **Test:**
 
 Per eseguire i test unitari, usa il comando `pytest` nella directory principale del progetto.
 
 
-
-
-
-#TODO: update english translastion
+---
 
 ### English
+---
 
 This project contains code for analyzing data from the Italian Lottery (Lotteria Italia).
 
@@ -65,20 +67,42 @@ This project contains code for analyzing data from the Italian Lottery (Lotteria
 
         streamlit run index.py
 
-*   `dashboard/`: Contains modules for creating the dashboard, including helpers and data management with pandas.
+    *   `dashboard/`: Contains modules for creating the dashboard, including helpers and data management with pandas.
+    *   `pagination/`: Handles data pagination.
+
+*   `main.py`: loads and and transforms data from html table to table 'lotteria' into 'testing' db
+
+        python main.py
+        
+    *   `etl/`: Contains scripts for Extract, Transform, Load (ETL) operations.
+
+
 *   `dbhelpers/`: Contains modules for database management, including configuration and query building.
-*   `pagination/`: Handles data pagination.
 *   `tests/`: Contains unit tests for the `dbhelpers` modules.
-*   `etl/`: Contains scripts for Extract, Transform, Load (ETL) operations.
-*   `.devcontainer/`: Configuration for the development environment in Docker.
 *   `docker-compose.yml`: Configuration file for Docker Compose.
+
+
+---
 
 **How to run the project:**
 
 1.  Make sure you have Docker and Docker Compose installed.
 2.  Clone the repository.
-3.  Run `docker compose up --build` in the project's root directory.
+3.  Creare ed attivare virtual environment:
+
+        python -m venv .venv
+        source .venv/bin/activate
+
+4.  Installare le dipendenze:
+
+        pip install -r requirements.txt
+
+5.  Run `docker compose up --build` in the project's root directory.
+6.  Run `python main.py` to create the table 'lotteria' into the 'testing' db.
+7.  Run `streamlit run index.py` to start Streamlit application.
 4.  The application will be available at `http://localhost:8501`.
+
+---
 
 **Tests:**
 
