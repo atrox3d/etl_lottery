@@ -4,7 +4,7 @@ from dashboard import helpers, fixselect, pandasdal as dal
 
 
 def display_options() -> tuple[bool, bool]:
-
+    ''' upper display option section of sidebar '''
     left, right = st.columns(2)
     
     with left:
@@ -24,6 +24,7 @@ def display_options() -> tuple[bool, bool]:
 
 
 def filter_options() -> bool:
+    ''' filter dataframe options in sidebar'''
     
     left, right = st.columns(2)
     
@@ -39,6 +40,7 @@ def filter_options() -> bool:
 
 
 def geo_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    ''' filter by location in sidebar'''
     
     prov = st.selectbox(                                                     # PROV
         label='seleziona una provincia',
@@ -60,6 +62,7 @@ def geo_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
 
 
 def ticket_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    ''' filter by ticket details in sidebar '''
     
     serie = st.selectbox(                                                   # SERIE
         label='seleziona una serie',
@@ -83,6 +86,7 @@ def ticket_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
 
 
 def prize_filters(df:pd.DataFrame, link:bool) -> tuple[str, str]:
+    ''' filter by money prizes in sidebar'''
     
     categoria = st.selectbox(                                               # CATEGORIA
         label='seleziona una categoria',

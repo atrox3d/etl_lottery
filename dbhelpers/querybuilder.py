@@ -20,6 +20,7 @@ def format_like(value, start:bool=False, middle:bool=False, end:bool=False) -> s
 
 
 def filter_dict_nulls(**kwargs) -> dict:
+    ''' get only non null values from dict '''
     return {k:v for k, v in kwargs.items() if v}
 
 

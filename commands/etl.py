@@ -17,13 +17,18 @@ app = typer.Typer()
 
 @app.command()
 def html2mysql(replace: bool = True, index: bool = True):
+    '''loads html tables to mysql db'''
+    
     logger.info('start etl process')
     
+    # load and validate html tables
     logger.info(f'loading data')
     winners = get_df_from_html(INPUT_PATH)
     check_nan = winners.isna().values.any()
     assert check_nan == False
     
+    # create db if not exists on mysql
+    # using default config: localhost, root
     try:
         logger.info('creating config without db name for db creation')
         config = build_config(database=None)
@@ -36,6 +41,7 @@ def html2mysql(replace: bool = True, index: bool = True):
         logger.error('could not create database')
         exit(1)
     
+    # load data to mysql db
     try:
         logger.info('creating default config with db name')
         config = build_config(database=DB_NAME)
@@ -58,6 +64,7 @@ def html2sqlite(
         replace : bool = True, 
         index   : bool = True
     ):
+    '''loads html tables to sqlite db'''
     logger.info('start etl process')
     
     logger.info(f'loading data')
@@ -65,8 +72,6 @@ def html2sqlite(
     check_nan = winners.isna().values.any()
     assert check_nan == False
     
-    # logger.info('creating default config')
-    # config = build_config(database=DB_NAME)
     # 
     # logger.info('creating db URL')
     db_url = f'sqlite:///{dbname}.db'

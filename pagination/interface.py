@@ -15,13 +15,15 @@ def paginated_df(
         navigation_menu:bool=True,
         hide_index:bool=True
 ):
-
+    '''create a paginated interface for a dataframe'''
+    
     for x in df.head().to_string().split('\n'):
         logger.info(x)
     logger.info(f'{len(df) = }')
 
     df = df.reset_index(drop=True)
     
+    # display sort menu if enabled
     if sort_menu:
         upleft_menu, upcenter_menu, upright_menu = st.columns(3)
 
@@ -42,10 +44,10 @@ def paginated_df(
                     ignore_index=True
                 )
     
-    
+    # the paginated df table
     paginated = st.container()
     
-    
+    # display navigatin menu if enabled
     if navigation_menu:
         dnleft_menu, dncenter_menu, dnright_menu = st.columns((4, 1, 1))
         
@@ -93,7 +95,8 @@ def paginated_df(
                     on_click=next_page,
                     disabled=current_page==total_pages
                 )
-
+        
+        # pagination display logic
         splitdf = data.split_df(df, batch_size)
         logger.info('-'*50)
         WIDTH = 20

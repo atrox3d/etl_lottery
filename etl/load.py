@@ -15,7 +15,8 @@ def create_mysql_db(
         url_object  :URL,
         db_name     :str
 ):
-
+    '''create db if not exists, useful when recreating docker service'''
+    
     logger.info('creating engine')
     engine = create_engine(url_object)
     
@@ -37,7 +38,8 @@ def load_to_mysql(
         replace     :bool = True,
         index       :bool = True
 ):
-
+    '''loadf df to mysql'''
+    
     logger.info('creating engine')
     logger.info(f'driver    : {url_object.drivername}')
     logger.info(f'host      : {url_object.host}')
@@ -66,7 +68,8 @@ def load_to_sqlite(
         replace     :bool = True,
         index       :bool = True
 ):
-
+    '''loadf df to sqlite'''
+    
     logger.info('creating engine')
     logger.info(f'database  : {url}')
     

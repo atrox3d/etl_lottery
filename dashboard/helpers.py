@@ -9,19 +9,19 @@ logger = logging.getLogger(__name__)
 
 def logger_console_space(rows=5):
     ''' create some space in the console output '''
+    
     for _ in range(rows):
         logger.info('')
 
 
 def reset_widgets():
     ''' reset widgets '''
+    
     logger.info('RESETTING WIDGETS')
     for el in st.session_state:
         if el not in ['link']:
             logger.debug(f'resetting {el}')
             del st.session_state[el]
-            # print(st.session_state[el])
-            # st.session_state[el] = None
     if fixselect.CLEAR_STATE:
         st.session_state.clear()
     logger_console_space()
@@ -41,6 +41,6 @@ def fix_widgets_reload():
 
 
 def reset_geo():
-    ''' resets geo section of widgets '''
+    ''' resets geo section of location widgets '''
     for elem in ['prov', 'luogo']:
         st.session_state[elem] = None

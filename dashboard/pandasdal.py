@@ -28,19 +28,22 @@ def get_connection_status(test_connection:Callable) -> str:
 
 
 def filter_dict_df_keys(df:pd.DataFrame, **state) -> dict:
+    ''' filter df values based on state keys '''
     return {k:v for k, v in state.items() if k in df.columns}
 
 
 @st.cache_data
 def get_empty_winners(_engine:Engine) -> pd.DataFrame:
+    ''' utility to get just mysql table column names '''
     empty_df = pd.read_sql('SELECT * FROM lotteria LIMIT 0;', _engine, index_col='index')
     return empty_df
 
 
 @st.cache_data(ttl=CACHE_TTL)
 def get_winners( _engine:Engine, **fields ) -> pd.DataFrame:
-    ''' get filtered df from mysql db '''
+    ''' get filtered df from db '''
     
+    # prepare query for pandas df
     logger.debug(f'{fields = }')
     params = filter_dict_df_keys(
             get_empty_winners(_engine),
@@ -52,7 +55,6 @@ def get_winners( _engine:Engine, **fields ) -> pd.DataFrame:
             **params
     )
     logger.debug(f'{params = }')
-
     
     sql, params = query_builder(
         'SELECT * FROM lotteria', 
@@ -61,6 +63,7 @@ def get_winners( _engine:Engine, **fields ) -> pd.DataFrame:
     logger.debug(f'{params = }')
     logger.debug(f'{sql = }')
     
+    # run query and return result df
     df =  pd.read_sql(text(sql), _engine, params=params, index_col='index')
     logger.debug(df)
     logger.debug(len(df))
@@ -77,6 +80,7 @@ def get_field(name:str, df:pd.DataFrame, link:bool, **kwargs) -> pd.DataFrame:
     filtered_kwargs = filter_dict_df_keys(df, **kwargs)
     logger.debug(f'{name = }, {link = }, {filtered_kwargs = }')
     
+    # filter df if linked option enabled in sidebar
     if link:
         for col, val in filtered_kwargs.items():
             if val is not None:

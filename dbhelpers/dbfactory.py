@@ -51,13 +51,13 @@ def get_connection_tester(
 
 #
 # setup db
-# TODO: move this to dbfactory
 #
 def setup_db(
     dbsource    : DbSources,
     config      : dict,
     sqlitepath  : str
 ) -> tuple[Union[sqlite3.Connection, MySQLConnection], Engine, callable, str]:
+    ''' returns db, engine, connection_tester, dbdetails based ond data source'''
     
     if dbsource == dbfactory.DbSources.MYSQL:
         db = dbfactory.get_db(dbfactory.DbSources.MYSQL, **config)

@@ -1,3 +1,6 @@
+'''
+some constants to alter the beaviour of the widgets in the dashboard
+'''
 
 ENABLED = True
 DISABLED = False

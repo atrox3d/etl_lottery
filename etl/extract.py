@@ -12,6 +12,7 @@ pd.options.display.width = 200
 
 
 def show_dfs(dfs:list[pd.DataFrame]):
+    '''display dfs for debugging'''
     for idx, df in enumerate(dfs):
         print(f'------------------- {idx} -----------------------')
         print(df.columns)
